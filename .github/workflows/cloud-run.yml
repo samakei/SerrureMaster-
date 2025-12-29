@@ -11,6 +11,10 @@ jobs:
     permissions:
       contents: read
       id-token: write
+    env:
+      # Valeurs par défaut (peuvent être surchargées par Secrets)
+      CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE || 'serruremaster' }}
+      GCP_REGION: ${{ secrets.GCP_REGION || 'europe-west1' }}
 
     steps:
       - name: Checkout repository
@@ -33,17 +37,18 @@ jobs:
 
       - name: Build and push Docker image
         env:
-          IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.CLOUD_RUN_SERVICE }}
+          IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.CLOUD_RUN_SERVICE }}
         run: |
           docker build -t "$IMAGE:${{ github.sha }}" .
           docker push "$IMAGE:${{ github.sha }}"
 
       - name: Deploy to Cloud Run
+        id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: ${{ secrets.CLOUD_RUN_SERVICE }}
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.CLOUD_RUN_SERVICE }}:${{ github.sha }}
-          region: ${{ secrets.GCP_REGION }}
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
+          region: ${{ env.GCP_REGION }}
           allow-unauthenticated: true
 
       - name: Output service URL
