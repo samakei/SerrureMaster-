@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "stylelint.vscode-stylelint",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "ms-vscode.extension-pack-for-react",
+    "github.copilot",
+    "eamodio.gitlens",
+    "ms-vscode.vscode-typescript-vue-plugin"
+  ]
+}

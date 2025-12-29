@@ -1,0 +1,23 @@
+# Browsers that we support
+last 2 versions
+> 0.5%
+not dead
+not IE 11
+
+# Chrome versions
+Chrome >= 121
+
+# Firefox versions
+Firefox >= 64
+
+# Safari versions
+Safari >= 15.4
+
+# Edge versions
+Edge >= 121
+
+# iOS Safari
+iOS >= 15.4
+
+# Samsung Internet
+Samsung >= 16

@@ -1,0 +1,89 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
+
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* stylelint-disable-next-line at-rule-no-unknown */
+  @apply bg-slate-50 text-slate-900 overflow-x-hidden;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  border-radius: 20px;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* Firefox properties applied conditionally below */
+}
+
+/* Apply scrollbar-width only in browsers that support it (Baseline 2024) */
+@supports (scrollbar-width: thin) {
+  .scrollbar-hide {
+    /* Firefox: hide scrollbar */
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+  }
+}
+
+/* 3D Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.rotate-y-12 {
+  transform: rotateY(-12deg);
+}
+.rotate-z-2 {
+  transform: rotateZ(2deg);
+}
+
+/* Animation delay helpers */
+.delay-0 {
+  animation-delay: 0s;
+}
+.delay-2000 {
+  animation-delay: 2s;
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-in,
+  .animate-slideUp,
+  .animate-bounce-subtle {
+    will-change: opacity, transform;
+  }
+}
+
+/* Prevent layout thrashing */
+img[loading='lazy'] {
+  content-visibility: auto;
+}
+
+/* Optimize heavy elements */
+.complex-component {
+  contain: layout style paint;
+}
