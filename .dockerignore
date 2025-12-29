@@ -1,0 +1,25 @@
+# Exclude unnecessary files from Docker build context
+node_modules
+npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
+.git
+.gitignore
+.vscode
+.DS_Store
+
+# Local build outputs (we rebuild inside the container)
+dist
+dist_old
+build
+
+# Env files: allow .env.production to be included so Vite can bake prod config
+.env
+.env.local
+.env.development
+!.env.production
+.env.*
+
+# Tests and coverage
+__tests__
+coverage
