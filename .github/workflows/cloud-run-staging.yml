@@ -48,7 +48,7 @@ jobs:
           service: ${{ env.CLOUD_RUN_SERVICE }}
           image: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
           region: ${{ env.GCP_REGION }}
-          allow-unauthenticated: true
+          allow_unauthenticated: true
 
       - name: Output staging URL
         run: 'echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"'
