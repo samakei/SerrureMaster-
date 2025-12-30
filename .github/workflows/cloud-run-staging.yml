@@ -1,0 +1,53 @@
+name: Deploy to Cloud Run (Staging PR)
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy-staging:
+    name: Build and Deploy Staging
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_STAGING_SERVICE || 'serruremaster-staging' }}
+      GCP_REGION: ${{ secrets.GCP_REGION || 'europe-west1' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker auth for gcr.io
+        run: gcloud auth configure-docker --quiet
+
+      - name: Build and push Docker image
+        env:
+          IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.CLOUD_RUN_SERVICE }}
+        run: |
+          docker build -t "$IMAGE:${{ github.sha }}" .
+          docker push "$IMAGE:${{ github.sha }}"
+
+      - name: Deploy to Cloud Run (staging)
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
+          region: ${{ env.GCP_REGION }}
+          allow-unauthenticated: true
+
+      - name: Output staging URL
+        run: echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"
