@@ -2,7 +2,7 @@ name: Deploy to Cloud Run (Staging PR)
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   deploy-staging:
@@ -51,7 +51,7 @@ jobs:
           allow-unauthenticated: true
 
       - name: Output staging URL
-        run: echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"
+        run: 'echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"'
 
       - name: Comment PR with staging URL
         if: github.event_name == 'pull_request'
