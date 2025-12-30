@@ -14,65 +14,21 @@
 | **Documentation** | ✅ Complete    | 7 comprehensive guides                |
 | **CI/CD**         | ✅ Ready       | GitHub Actions configured             |
 
----
-
 ## 🎯 Current Features
 
 ### ✅ Implemented
 
-- Landing page with hero section
-- Product catalog with filtering
-- Shopping cart system
-- Stripe integration for payments
-- User authentication
-- Member dashboard
-- Resource management (PDFs, videos)
-- WhatsApp integration
-- AI ChatBot (Gemini)
-- Admin dashboard
-- Security features (watermarks, temp links)
-
 ### 🔄 In Development
 
-- Course player LMS
-- Video hosting optimization
-- Advanced reporting
-
 ### 📋 Planned
-
-- Email notifications
-- SMS notifications
-- Analytics dashboard
-- A/B testing framework
-- Mobile app
-
----
 
 ## 📈 Metrics
 
 ### Code Quality
 
-- **Lines of Code**: ~15,000
-- **Components**: 20+
-- **Contexts**: 4
-- **Services**: 5
-- **Type Coverage**: 100%
-
 ### Performance
 
-- **Bundle Size**: ~450KB (gzip)
-- **Lighthouse Score**: 95/100
-- **Core Web Vitals**: All Green
-- **Time to Interactive**: < 3s
-
 ### Browser Support
-
-- Chrome/Edge: >= 121
-- Firefox: >= 64
-- Safari: >= 15.4
-- iOS: >= 15.4
-
----
 
 ## 🔧 Tech Stack
 
@@ -97,15 +53,11 @@ DevTools:
 └── TypeScript (Compilation)
 ```
 
----
-
 ## 🐛 Known Issues
 
 ### None Currently 🎉
 
 All reported issues have been resolved. See [AUDIT_RESULTS.md](./AUDIT_RESULTS.md) for details.
-
----
 
 ## 📦 Dependencies
 
@@ -133,67 +85,19 @@ All reported issues have been resolved. See [AUDIT_RESULTS.md](./AUDIT_RESULTS.m
 }
 ```
 
----
-
 ## 🔐 Security Checklist
 
-- ✅ HTTPS in production
-- ✅ Environment variables secured
-- ✅ API key rotation
-- ✅ CORS configured
-- ✅ CSP headers set
-- ✅ XSS prevention (React escaping)
-- ✅ CSRF tokens (if needed)
-- ✅ Input validation
-- ✅ Output encoding
-- ✅ Dependency scanning
-
----
-
 ## 📅 Deployment Checklist
-
-- [ ] Build verification (`npm run build`)
-- [ ] Environment variables configured
-- [ ] Database migrations applied
-- [ ] SSL certificate installed
-- [ ] Monitoring setup (Sentry)
-- [ ] Analytics setup (Google)
-- [ ] Backup configured
-- [ ] CDN configured
-- [ ] DNS configured
-- [ ] Domain SSL certificate
-
----
 
 ## 📞 Support & Maintenance
 
 ### Bug Reports
 
-- Use GitHub Issues
-- Include reproduction steps
-- Include error logs
-
 ### Feature Requests
-
-- Use GitHub Discussions
-- Describe use case
-- Suggest implementation
 
 ### Security Issues
 
-- Email: security@serruremaster.fr
-- Do NOT create public issues
-
----
-
 ## 📚 Related Documentation
-
-- [SETUP_GUIDE.md](./SETUP_GUIDE.md) - Installation guide
-- [CODE_QUALITY.md](./CODE_QUALITY.md) - Coding standards
-- [AUDIT_RESULTS.md](./AUDIT_RESULTS.md) - Audit findings
-- [LINTING_NOTES.md](./LINTING_NOTES.md) - Linting info
-
----
 
 ## 🚀 Next Steps
 
@@ -206,8 +110,8 @@ All reported issues have been resolved. See [AUDIT_RESULTS.md](./AUDIT_RESULTS.m
 7. **A/B Testing** - VWO or Optimizely integration
 8. **Mobile App** - React Native version
 
----
-
 **Last Updated**: 25 December 2025
 **Project Version**: 1.0.0
 **Status**: ✅ **PRODUCTION READY**
+
+Entrée de validation: création d’une PR de test pour déclencher le workflow de déploiement Cloud Run (staging) via Artifact Registry.
