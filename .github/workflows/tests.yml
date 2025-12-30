@@ -10,6 +10,26 @@ env:
   NODE_VERSION: '18'
 
 jobs:
+  # Job 0: Lint & Format
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: ESLint
+        run: npx eslint .
+        continue-on-error: true
+      - name: Prettier check
+        run: npx prettier --check .
+        continue-on-error: true
+
   # Job 1: Type Checking
   types:
     name: TypeScript Type Check
@@ -24,27 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Type check (no emit)
-          run: npx tsc --noEmit
-
-    # Job 0: Lint & Format
-    lint:
-      name: Lint & Format
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Setup Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: ${{ env.NODE_VERSION }}
-            cache: 'npm'
-        - name: Install dependencies
-          run: npm ci
-        - name: ESLint
-          run: npx eslint .
-          continue-on-error: true
-        - name: Prettier check
-          run: npx prettier --check .
-          continue-on-error: true
+        run: npx tsc --noEmit
   # Job 2: Unit Tests (Vitest)
   test:
     name: Unit Tests (Vitest)
@@ -91,7 +91,7 @@ jobs:
   status:
     name: Workflow Status
     runs-on: ubuntu-latest
-    needs: [types, test, build]
+    needs: [lint, types, test, build]
     if: always()
     steps:
       - name: Check workflow status
