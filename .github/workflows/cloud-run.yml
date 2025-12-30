@@ -12,10 +12,10 @@ jobs:
       contents: read
       id-token: write
     env:
-      # Valeurs par défaut (peuvent être surchargées par Secrets)
-      CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE || 'serruremaster' }}
-      GCP_REGION: ${{ secrets.GCP_REGION || 'europe-west1' }}
-      AR_REPO: ${{ secrets.AR_REPO || 'serruremaster' }}
+      # Valeurs par défaut (surcharges via secrets ci-dessous)
+      CLOUD_RUN_SERVICE: 'serruremaster'
+      GCP_REGION: 'europe-west1'
+      AR_REPO: 'serruremaster'
 
     steps:
       - name: Checkout repository
@@ -32,6 +32,18 @@ jobs:
           # Créez un compte de service avec IAM rôle Cloud Run Admin + Artifact Registry Writer
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Override CLOUD_RUN_SERVICE from secret
+        if: ${{ secrets.CLOUD_RUN_SERVICE != '' }}
+        run: echo "CLOUD_RUN_SERVICE=${{ secrets.CLOUD_RUN_SERVICE }}" >> $GITHUB_ENV
+
+      - name: Override GCP_REGION from secret
+        if: ${{ secrets.GCP_REGION != '' }}
+        run: echo "GCP_REGION=${{ secrets.GCP_REGION }}" >> $GITHUB_ENV
+
+      - name: Override AR_REPO from secret
+        if: ${{ secrets.AR_REPO != '' }}
+        run: echo "AR_REPO=${{ secrets.AR_REPO }}" >> $GITHUB_ENV
 
       - name: Configure Docker auth for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
