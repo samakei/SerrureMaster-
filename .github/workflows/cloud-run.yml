@@ -15,6 +15,7 @@ jobs:
       # Valeurs par défaut (peuvent être surchargées par Secrets)
       CLOUD_RUN_SERVICE: ${{ secrets.CLOUD_RUN_SERVICE || 'serruremaster' }}
       GCP_REGION: ${{ secrets.GCP_REGION || 'europe-west1' }}
+      AR_REPO: ${{ secrets.AR_REPO || 'serruremaster' }}
 
     steps:
       - name: Checkout repository
@@ -32,13 +33,13 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Configure Docker auth for gcr.io
-        run: gcloud auth configure-docker --quiet
+      - name: Configure Docker auth for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
-      - name: Build and push Docker image
-        env:
-          IMAGE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.CLOUD_RUN_SERVICE }}
+      - name: Build and push Docker image (Artifact Registry)
         run: |
+          AR_HOST="${{ env.GCP_REGION }}-docker.pkg.dev"
+          IMAGE="$AR_HOST/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
           docker build -t "$IMAGE:${{ github.sha }}" .
           docker push "$IMAGE:${{ github.sha }}"
 
@@ -47,7 +48,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.CLOUD_RUN_SERVICE }}
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
+          image: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
           region: ${{ env.GCP_REGION }}
           allow-unauthenticated: true
 
