@@ -59,25 +59,41 @@ jobs:
             echo "AR_REPO=${INPUT}" >> $GITHUB_ENV
           fi
 
-      - name: Validate required VITE secrets
+      - name: Resolve VITE_* from secrets or variables
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
+          S_VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          V_VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          S_VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          V_VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          S_VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
+          V_VITE_STRIPE_PUBLIC_KEY: ${{ vars.VITE_STRIPE_PUBLIC_KEY }}
+          S_VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+          V_VITE_GEMINI_API_KEY: ${{ vars.VITE_GEMINI_API_KEY }}
+        run: |
+          export_vite() {
+            name="$1"; sec="$2"; var="$3";
+            val="${sec}"
+            if [ -z "$val" ]; then val="${var}"; fi
+            if [ -n "$val" ]; then echo "$name=$val" >> $GITHUB_ENV; fi
+          }
+          export_vite VITE_SUPABASE_URL "$S_VITE_SUPABASE_URL" "$V_VITE_SUPABASE_URL"
+          export_vite VITE_SUPABASE_ANON_KEY "$S_VITE_SUPABASE_ANON_KEY" "$V_VITE_SUPABASE_ANON_KEY"
+          export_vite VITE_STRIPE_PUBLIC_KEY "$S_VITE_STRIPE_PUBLIC_KEY" "$V_VITE_STRIPE_PUBLIC_KEY"
+          export_vite VITE_GEMINI_API_KEY "$S_VITE_GEMINI_API_KEY" "$V_VITE_GEMINI_API_KEY"
+
+      - name: Validate required VITE values
         run: |
           missing=""
           for v in VITE_SUPABASE_URL VITE_SUPABASE_ANON_KEY VITE_STRIPE_PUBLIC_KEY; do
             val=$(eval echo \${$v})
-            if [ -z "$val" ]; then
-              missing="$missing $v"
-            fi
+            if [ -z "$val" ]; then missing="$missing $v"; fi
           done
           if [ -n "$missing" ]; then
-            echo "❌ Secrets manquants:$missing"
-            echo "Ajoutez-les dans GitHub → Settings → Secrets and variables → Actions"
+            echo "❌ Variables manquantes:$missing"
+            echo "Ajoutez-les via Actions Secrets ou Variables (repo/organisation)."
             exit 1
           fi
-          echo "✅ Tous les secrets VITE requis sont présents."
+          echo "✅ Tous les VITE requis sont présents."
 
       - name: Configure Docker auth for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
@@ -87,10 +103,10 @@ jobs:
           AR_HOST="${{ env.GCP_REGION }}-docker.pkg.dev"
           IMAGE="$AR_HOST/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
           docker build \
-            --build-arg VITE_SUPABASE_URL="${{ secrets.VITE_SUPABASE_URL }}" \
-            --build-arg VITE_SUPABASE_ANON_KEY="${{ secrets.VITE_SUPABASE_ANON_KEY }}" \
-            --build-arg VITE_STRIPE_PUBLIC_KEY="${{ secrets.VITE_STRIPE_PUBLIC_KEY }}" \
-            --build-arg VITE_GEMINI_API_KEY="${{ secrets.VITE_GEMINI_API_KEY }}" \
+            --build-arg VITE_SUPABASE_URL="${VITE_SUPABASE_URL}" \
+            --build-arg VITE_SUPABASE_ANON_KEY="${VITE_SUPABASE_ANON_KEY}" \
+            --build-arg VITE_STRIPE_PUBLIC_KEY="${VITE_STRIPE_PUBLIC_KEY}" \
+            --build-arg VITE_GEMINI_API_KEY="${VITE_GEMINI_API_KEY}" \
             -t "$IMAGE:${{ github.sha }}" .
           docker push "$IMAGE:${{ github.sha }}"
 

@@ -56,8 +56,33 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
+      - name: Resolve VITE_* for tests (secrets or variables)
+        env:
+          S_VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          V_VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          S_VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          V_VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          S_VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
+          V_VITE_STRIPE_PUBLIC_KEY: ${{ vars.VITE_STRIPE_PUBLIC_KEY }}
+          S_VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+          V_VITE_GEMINI_API_KEY: ${{ vars.VITE_GEMINI_API_KEY }}
+        run: |
+          export_vite() {
+            name="$1"; sec="$2"; var="$3";
+            val="${sec}"; if [ -z "$val" ]; then val="${var}"; fi
+            if [ -n "$val" ]; then echo "$name=$val" >> $GITHUB_ENV; fi
+          }
+          export_vite VITE_SUPABASE_URL "$S_VITE_SUPABASE_URL" "$V_VITE_SUPABASE_URL"
+          export_vite VITE_SUPABASE_ANON_KEY "$S_VITE_SUPABASE_ANON_KEY" "$V_VITE_SUPABASE_ANON_KEY"
+          export_vite VITE_STRIPE_PUBLIC_KEY "$S_VITE_STRIPE_PUBLIC_KEY" "$V_VITE_STRIPE_PUBLIC_KEY"
+          export_vite VITE_GEMINI_API_KEY "$S_VITE_GEMINI_API_KEY" "$V_VITE_GEMINI_API_KEY"
       - name: Run tests
         run: npm run test -- --run --coverage
+        env:
+          VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
+          VITE_STRIPE_PUBLIC_KEY: ${{ env.VITE_STRIPE_PUBLIC_KEY }}
+          VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
 
   # Job 3: Build
   build:
@@ -72,13 +97,33 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
+      - name: Resolve VITE_* for build (secrets or variables)
+        env:
+          S_VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          V_VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          S_VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          V_VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
+          S_VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
+          V_VITE_STRIPE_PUBLIC_KEY: ${{ vars.VITE_STRIPE_PUBLIC_KEY }}
+          S_VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+          V_VITE_GEMINI_API_KEY: ${{ vars.VITE_GEMINI_API_KEY }}
+        run: |
+          export_vite() {
+            name="$1"; sec="$2"; var="$3";
+            val="${sec}"; if [ -z "$val" ]; then val="${var}"; fi
+            if [ -n "$val" ]; then echo "$name=$val" >> $GITHUB_ENV; fi
+          }
+          export_vite VITE_SUPABASE_URL "$S_VITE_SUPABASE_URL" "$V_VITE_SUPABASE_URL"
+          export_vite VITE_SUPABASE_ANON_KEY "$S_VITE_SUPABASE_ANON_KEY" "$V_VITE_SUPABASE_ANON_KEY"
+          export_vite VITE_STRIPE_PUBLIC_KEY "$S_VITE_STRIPE_PUBLIC_KEY" "$V_VITE_STRIPE_PUBLIC_KEY"
+          export_vite VITE_GEMINI_API_KEY "$S_VITE_GEMINI_API_KEY" "$V_VITE_GEMINI_API_KEY"
       - name: Build
         run: npm run build
         env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
-          VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
+          VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
+          VITE_STRIPE_PUBLIC_KEY: ${{ env.VITE_STRIPE_PUBLIC_KEY }}
+          VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
