@@ -158,6 +158,16 @@ jobs:
           image: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
           region: ${{ env.GCP_REGION }}
 
+      - name: Smoke test /_health
+        id: health
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
+        continue-on-error: true
+        run: |
+          URL="${{ steps.deploy.outputs.url }}"
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" "${URL}/_health" || true)
+          echo "Health status code: $CODE"
+          echo "code=$CODE" >> $GITHUB_OUTPUT
+
       - name: Output staging URL
         if: ${{ steps.gate.outputs.should_deploy == 'true' }}
         run: 'echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"'
@@ -168,7 +178,12 @@ jobs:
         with:
           script: |
             const url = "${{ steps.deploy.outputs.url }}";
-            const body = `🚀 Cloud Run Staging prêt:\n\n**Service:** ${{ env.CLOUD_RUN_SERVICE }}\n**Région:** ${{ env.GCP_REGION }}\n**URL:** ${url}`;
+            const healthCode = "${{ steps.health.outputs.code }}";
+            const ok = healthCode === '200';
+            const healthLine = ok
+              ? `**Health:** OK (code ${healthCode})`
+              : `**Health:** Non OK (code ${healthCode}). Si 403, rendez le service public ou utilisez un token d’invocation.`;
+            const body = `🚀 Cloud Run Staging prêt:\n\n**Service:** ${{ env.CLOUD_RUN_SERVICE }}\n**Région:** ${{ env.GCP_REGION }}\n**URL:** ${url}\n${healthLine}`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
