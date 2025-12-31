@@ -38,28 +38,36 @@ jobs:
           wip="${S_WORKLOAD_IDENTITY_PROVIDER}"; if [ -z "$wip" ]; then wip="${V_WORKLOAD_IDENTITY_PROVIDER}"; fi; echo "WORKLOAD_IDENTITY_PROVIDER=$wip" >> $GITHUB_ENV
           pid="${S_GCP_PROJECT_ID}"; if [ -z "$pid" ]; then pid="${V_GCP_PROJECT_ID}"; fi; echo "GCP_PROJECT_ID=$pid" >> $GITHUB_ENV
 
-      - name: Validate GCP auth inputs
+      - name: Gate staging deploy
+        id: gate
+        env:
+          PR_SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
-          if [ -z "${GCP_SA_KEY}" ] && [ -z "${WORKLOAD_IDENTITY_PROVIDER}" ]; then
-            echo "❌ Aucun identifiant GCP fourni."
-            echo "Configurez un secret repo 'GCP_SA_KEY' (JSON) ou 'WORKLOAD_IDENTITY_PROVIDER'."
-            echo "Note: les secrets ne sont pas exposés aux PR issues d'un fork."
-            exit 1
+          should="false"
+          if [ "${PR_SAME_REPO}" = "true" ] && { [ -n "${GCP_SA_KEY}" ] || [ -n "${WORKLOAD_IDENTITY_PROVIDER}" ]; }; then
+            should="true"
           fi
+          echo "should_deploy=$should" >> $GITHUB_OUTPUT
+
+      - name: Validate GCP auth inputs
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
+        run: |
+          echo "✅ Identifiants GCP disponibles, poursuite du déploiement."
 
       - name: Authenticate to Google Cloud
-        if: ${{ env.GCP_SA_KEY != '' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && env.GCP_SA_KEY != '' }}
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Authenticate to Google Cloud via Workload Identity
-        if: ${{ env.GCP_SA_KEY == '' && env.WORKLOAD_IDENTITY_PROVIDER != '' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && env.GCP_SA_KEY == '' && env.WORKLOAD_IDENTITY_PROVIDER != '' }}
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
 
       - name: Setup gcloud
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
@@ -125,9 +133,11 @@ jobs:
           echo "✅ Tous les VITE requis sont présents."
 
       - name: Configure Docker auth for Artifact Registry
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
       - name: Build and push Docker image (Artifact Registry)
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
         run: |
           AR_HOST="${{ env.GCP_REGION }}-docker.pkg.dev"
           IMAGE="$AR_HOST/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
@@ -141,6 +151,7 @@ jobs:
 
       - name: Deploy to Cloud Run (staging)
         id: deploy
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.CLOUD_RUN_SERVICE }}
@@ -148,15 +159,29 @@ jobs:
           region: ${{ env.GCP_REGION }}
 
       - name: Output staging URL
+        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
         run: 'echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"'
 
       - name: Comment PR with staging URL
-        if: github.event_name == 'pull_request'
+        if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'true' }}
         uses: actions/github-script@v7
         with:
           script: |
             const url = "${{ steps.deploy.outputs.url }}";
             const body = `🚀 Cloud Run Staging prêt:\n\n**Service:** ${{ env.CLOUD_RUN_SERVICE }}\n**Région:** ${{ env.GCP_REGION }}\n**URL:** ${url}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
+
+      - name: Comment PR when staging skipped
+        if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'false' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `ℹ️ Déploiement staging ignoré.\n\nMotifs possibles :\n- PR depuis un *fork* (les secrets ne sont pas exposés).\n- Identifiants GCP manquants (GCP_SA_KEY ou WORKLOAD_IDENTITY_PROVIDER).\n\nAction proposée :\n- Pour déployer, ouvrez la PR depuis une branche interne, ou configurez Workload Identity et mettez \`WORKLOAD_IDENTITY_PROVIDER\` en Variables du dépôt.`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
