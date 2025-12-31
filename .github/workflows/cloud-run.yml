@@ -104,4 +104,5 @@ jobs:
           region: ${{ env.GCP_REGION }}
 
       - name: Output service URL
-        run: echo "Deployed to Cloud Run: ${{ steps.deploy.outputs.url }}"
+        run: |
+          echo "Deployed to Cloud Run: ${{ steps.deploy.outputs.url }}"
