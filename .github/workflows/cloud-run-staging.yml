@@ -26,14 +26,43 @@ jobs:
           node-version: '20.19.0'
 
       - name: Authenticate to Google Cloud
+        if: ${{ env.GCP_SA_KEY != '' }}
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ env.GCP_SA_KEY }}
+
+      - name: Authenticate to Google Cloud via Workload Identity
+        if: ${{ env.GCP_SA_KEY == '' && env.WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+
+      - name: Validate GCP auth inputs
+        run: |
+          if [ -z "${GCP_SA_KEY}" ] && [ -z "${WORKLOAD_IDENTITY_PROVIDER}" ]; then
+            echo "❌ Aucun identifiant GCP fourni."
+            echo "Configurez un secret repo 'GCP_SA_KEY' (JSON) ou 'WORKLOAD_IDENTITY_PROVIDER'."
+            echo "Note: les secrets ne sont pas exposés aux PR issues d'un fork."
+            exit 1
+          fi
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      - name: Resolve GCP auth and project from secrets or variables
+        env:
+          S_GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          V_GCP_SA_KEY: ${{ vars.GCP_SA_KEY }}
+          S_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          V_WORKLOAD_IDENTITY_PROVIDER: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          S_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          V_GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+        run: |
+          val="${S_GCP_SA_KEY}"; if [ -z "$val" ]; then val="${V_GCP_SA_KEY}"; fi; echo "GCP_SA_KEY=$val" >> $GITHUB_ENV
+          wip="${S_WORKLOAD_IDENTITY_PROVIDER}"; if [ -z "$wip" ]; then wip="${V_WORKLOAD_IDENTITY_PROVIDER}"; fi; echo "WORKLOAD_IDENTITY_PROVIDER=$wip" >> $GITHUB_ENV
+          pid="${S_GCP_PROJECT_ID}"; if [ -z "$pid" ]; then pid="${V_GCP_PROJECT_ID}"; fi; echo "GCP_PROJECT_ID=$pid" >> $GITHUB_ENV
 
       - name: Override CLOUD_RUN_SERVICE from secret
         env:
