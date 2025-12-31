@@ -13,7 +13,7 @@ jobs:
       id-token: write
     env:
       # Valeurs par défaut (surcharges via secrets ci-dessous)
-      CLOUD_RUN_SERVICE: 'serruremaster'
+      CLOUD_RUN_SERVICE: 'serruremaster-web'
       GCP_REGION: 'europe-west1'
       AR_REPO: 'serruremaster'
 
@@ -67,7 +67,12 @@ jobs:
         run: |
           AR_HOST="${{ env.GCP_REGION }}-docker.pkg.dev"
           IMAGE="$AR_HOST/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
-          docker build -t "$IMAGE:${{ github.sha }}" .
+          docker build \
+            --build-arg VITE_SUPABASE_URL="${{ secrets.VITE_SUPABASE_URL }}" \
+            --build-arg VITE_SUPABASE_ANON_KEY="${{ secrets.VITE_SUPABASE_ANON_KEY }}" \
+            --build-arg VITE_STRIPE_PUBLIC_KEY="${{ secrets.VITE_STRIPE_PUBLIC_KEY }}" \
+            --build-arg VITE_GEMINI_API_KEY="${{ secrets.VITE_GEMINI_API_KEY }}" \
+            -t "$IMAGE:${{ github.sha }}" .
           docker push "$IMAGE:${{ github.sha }}"
 
       - name: Deploy to Cloud Run
