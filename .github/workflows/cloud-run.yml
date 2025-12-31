@@ -60,6 +60,26 @@ jobs:
             echo "AR_REPO=${INPUT}" >> $GITHUB_ENV
           fi
 
+      - name: Validate required VITE secrets
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
+        run: |
+          missing=""
+          for v in VITE_SUPABASE_URL VITE_SUPABASE_ANON_KEY VITE_STRIPE_PUBLIC_KEY; do
+            val=$(eval echo \${$v})
+            if [ -z "$val" ]; then
+              missing="$missing $v"
+            fi
+          done
+          if [ -n "$missing" ]; then
+            echo "❌ Secrets manquants:$missing"
+            echo "Ajoutez-les dans GitHub → Settings → Secrets and variables → Actions"
+            exit 1
+          fi
+          echo "✅ Tous les secrets VITE requis sont présents."
+
       - name: Configure Docker auth for Artifact Registry
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
