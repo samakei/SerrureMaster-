@@ -25,32 +25,6 @@ jobs:
         with:
           node-version: '20.19.0'
 
-      - name: Authenticate to Google Cloud
-        if: ${{ env.GCP_SA_KEY != '' }}
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
-
-      - name: Authenticate to Google Cloud via Workload Identity
-        if: ${{ env.GCP_SA_KEY == '' && env.WORKLOAD_IDENTITY_PROVIDER != '' }}
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
-
-      - name: Validate GCP auth inputs
-        run: |
-          if [ -z "${GCP_SA_KEY}" ] && [ -z "${WORKLOAD_IDENTITY_PROVIDER}" ]; then
-            echo "❌ Aucun identifiant GCP fourni."
-            echo "Configurez un secret repo 'GCP_SA_KEY' (JSON) ou 'WORKLOAD_IDENTITY_PROVIDER'."
-            echo "Note: les secrets ne sont pas exposés aux PR issues d'un fork."
-            exit 1
-          fi
-
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-
       - name: Resolve GCP auth and project from secrets or variables
         env:
           S_GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
@@ -63,6 +37,32 @@ jobs:
           val="${S_GCP_SA_KEY}"; if [ -z "$val" ]; then val="${V_GCP_SA_KEY}"; fi; echo "GCP_SA_KEY=$val" >> $GITHUB_ENV
           wip="${S_WORKLOAD_IDENTITY_PROVIDER}"; if [ -z "$wip" ]; then wip="${V_WORKLOAD_IDENTITY_PROVIDER}"; fi; echo "WORKLOAD_IDENTITY_PROVIDER=$wip" >> $GITHUB_ENV
           pid="${S_GCP_PROJECT_ID}"; if [ -z "$pid" ]; then pid="${V_GCP_PROJECT_ID}"; fi; echo "GCP_PROJECT_ID=$pid" >> $GITHUB_ENV
+
+      - name: Validate GCP auth inputs
+        run: |
+          if [ -z "${GCP_SA_KEY}" ] && [ -z "${WORKLOAD_IDENTITY_PROVIDER}" ]; then
+            echo "❌ Aucun identifiant GCP fourni."
+            echo "Configurez un secret repo 'GCP_SA_KEY' (JSON) ou 'WORKLOAD_IDENTITY_PROVIDER'."
+            echo "Note: les secrets ne sont pas exposés aux PR issues d'un fork."
+            exit 1
+          fi
+
+      - name: Authenticate to Google Cloud
+        if: ${{ env.GCP_SA_KEY != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ env.GCP_SA_KEY }}
+
+      - name: Authenticate to Google Cloud via Workload Identity
+        if: ${{ env.GCP_SA_KEY == '' && env.WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Override CLOUD_RUN_SERVICE from secret
         env:
@@ -130,7 +130,7 @@ jobs:
       - name: Build and push Docker image (Artifact Registry)
         run: |
           AR_HOST="${{ env.GCP_REGION }}-docker.pkg.dev"
-          IMAGE="$AR_HOST/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
+          IMAGE="$AR_HOST/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
           docker build \
             --build-arg VITE_SUPABASE_URL="${VITE_SUPABASE_URL}" \
             --build-arg VITE_SUPABASE_ANON_KEY="${VITE_SUPABASE_ANON_KEY}" \
@@ -144,7 +144,7 @@ jobs:
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.CLOUD_RUN_SERVICE }}
-          image: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
+          image: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}:${{ github.sha }}
           region: ${{ env.GCP_REGION }}
 
       - name: Output staging URL
