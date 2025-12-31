@@ -8,7 +8,7 @@ import globals from 'globals';
 export default [
   {
     ignores: ['**/build/**', '**/dist/**', '**/node_modules/**'],
-    linterOptions: { reportUnusedDisableDirectives: 'off' },
+    linterOptions: { reportUnusedDisableDirectives: 'off', noInlineConfig: true },
   },
   js.configs.recommended,
   {
