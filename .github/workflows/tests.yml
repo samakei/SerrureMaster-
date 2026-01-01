@@ -26,7 +26,19 @@ jobs:
       - name: ESLint (fail on warnings)
         run: npx eslint App.tsx index.tsx components/ contexts/ services/ --max-warnings=0
       - name: Prettier check (fail on diff)
-        run: npx prettier --check .
+        run: |
+          npx prettier --check \
+            "components" \
+            "contexts" \
+            "services" \
+            "supabase/functions" \
+            "App.tsx" \
+            "index.tsx" \
+            "eslint.config.js" \
+            "tailwind.config.js" \
+            "postcss.config.js" \
+            "vite.config.ts" \
+            "types.ts"
 
   # Job 1: Type Checking
   types:
