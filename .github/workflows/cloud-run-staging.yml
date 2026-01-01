@@ -123,7 +123,8 @@ jobs:
           export_vite VITE_STRIPE_PUBLIC_KEY "$S_VITE_STRIPE_PUBLIC_KEY" "$V_VITE_STRIPE_PUBLIC_KEY"
           export_vite VITE_GEMINI_API_KEY "$S_VITE_GEMINI_API_KEY" "$V_VITE_GEMINI_API_KEY"
 
-      - name: Validate required VITE values
+      - name: Gate VITE variables
+        id: vite
         run: |
           missing=""
           for v in VITE_SUPABASE_URL VITE_SUPABASE_ANON_KEY VITE_STRIPE_PUBLIC_KEY; do
@@ -131,18 +132,25 @@ jobs:
             if [ -z "$val" ]; then missing="$missing $v"; fi
           done
           if [ -n "$missing" ]; then
-            echo "❌ Variables manquantes:$missing"
-            echo "Ajoutez-les via Actions Secrets ou Variables (repo/organisation)."
-            exit 1
+            echo "vite_ready=false" >> $GITHUB_OUTPUT
+            echo "missing=$missing" >> $GITHUB_OUTPUT
+            echo "ℹ️ VITE manquantes:$missing"
+          else
+            echo "vite_ready=true" >> $GITHUB_OUTPUT
+            echo "✅ Tous les VITE requis sont présents."
           fi
-          echo "✅ Tous les VITE requis sont présents."
+
+      - name: Validate required VITE values
+        if: ${{ steps.vite.outputs.vite_ready == 'true' }}
+        run: |
+          echo "✅ Variables VITE présentes, build autorisé."
 
       - name: Configure Docker auth for Artifact Registry
-        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'true' }}
         run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
 
       - name: Build and push Docker image (Artifact Registry)
-        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'true' }}
         run: |
           AR_HOST="${{ env.GCP_REGION }}-docker.pkg.dev"
           IMAGE="$AR_HOST/${{ steps.resolve.outputs.project_id }}/${{ env.AR_REPO }}/${{ env.CLOUD_RUN_SERVICE }}"
@@ -156,7 +164,7 @@ jobs:
 
       - name: Deploy to Cloud Run (staging)
         id: deploy
-        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'true' }}
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.CLOUD_RUN_SERVICE }}
@@ -174,11 +182,11 @@ jobs:
           echo "code=$CODE" >> $GITHUB_OUTPUT
 
       - name: Output staging URL
-        if: ${{ steps.gate.outputs.should_deploy == 'true' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'true' }}
         run: 'echo "Staging deployed to: ${{ steps.deploy.outputs.url }}"'
 
       - name: Comment PR with staging URL
-        if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'true' }}
+        if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'true' }}
         uses: actions/github-script@v7
         with:
           script: |
@@ -189,6 +197,20 @@ jobs:
               ? `**Health:** OK (code ${healthCode})`
               : `**Health:** Non OK (code ${healthCode}). Si 403, rendez le service public ou utilisez un token d’invocation.`;
             const body = `🚀 Cloud Run Staging prêt:\n\n**Service:** ${{ env.CLOUD_RUN_SERVICE }}\n**Région:** ${{ env.GCP_REGION }}\n**URL:** ${url}\n${healthLine}`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body
+            });
+
+      - name: Comment PR when VITE variables missing
+        if: ${{ github.event_name == 'pull_request' && steps.vite.outputs.vite_ready == 'false' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const missing = "${{ steps.vite.outputs.missing }}";
+            const body = `⚠️ Déploiement staging ignoré: variables VITE manquantes.\n\nManquantes:${missing}\n\nAjoutez-les via Settings → Actions → Variables (repo/organisation):\n- VITE_SUPABASE_URL\n- VITE_SUPABASE_ANON_KEY\n- VITE_STRIPE_PUBLIC_KEY`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
