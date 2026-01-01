@@ -30,16 +30,24 @@ jobs:
       - name: Resolve GCP auth and project from repo variables
         id: resolve
         env:
+          S_GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
           V_GCP_SA_KEY: ${{ vars.GCP_SA_KEY }}
+          S_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
           V_WORKLOAD_IDENTITY_PROVIDER: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          S_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           V_GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+          S_GCP_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
           V_GCP_SERVICE_ACCOUNT_EMAIL: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
         run: |
-          echo "GCP_SA_KEY=${V_GCP_SA_KEY}" >> $GITHUB_ENV
-          echo "WORKLOAD_IDENTITY_PROVIDER=${V_WORKLOAD_IDENTITY_PROVIDER}" >> $GITHUB_ENV
-          echo "GCP_PROJECT_ID=${V_GCP_PROJECT_ID}" >> $GITHUB_ENV
-          echo "GCP_SERVICE_ACCOUNT_EMAIL=${V_GCP_SERVICE_ACCOUNT_EMAIL}" >> $GITHUB_ENV
-          echo "project_id=${V_GCP_PROJECT_ID}" >> $GITHUB_OUTPUT
+          # Préférer Secrets, sinon Variables
+          [ -n "${S_GCP_SA_KEY}" ] && echo "GCP_SA_KEY=${S_GCP_SA_KEY}" >> $GITHUB_ENV || echo "GCP_SA_KEY=${V_GCP_SA_KEY}" >> $GITHUB_ENV
+          [ -n "${S_WORKLOAD_IDENTITY_PROVIDER}" ] && echo "WORKLOAD_IDENTITY_PROVIDER=${S_WORKLOAD_IDENTITY_PROVIDER}" >> $GITHUB_ENV || echo "WORKLOAD_IDENTITY_PROVIDER=${V_WORKLOAD_IDENTITY_PROVIDER}" >> $GITHUB_ENV
+          # project_id et service account peuvent être en Secrets ou Variables
+          PID="${S_GCP_PROJECT_ID}"; [ -z "$PID" ] && PID="${V_GCP_PROJECT_ID}"
+          SA_EMAIL="${S_GCP_SERVICE_ACCOUNT_EMAIL}"; [ -z "$SA_EMAIL" ] && SA_EMAIL="${V_GCP_SERVICE_ACCOUNT_EMAIL}"
+          echo "GCP_PROJECT_ID=${PID}" >> $GITHUB_ENV
+          echo "GCP_SERVICE_ACCOUNT_EMAIL=${SA_EMAIL}" >> $GITHUB_ENV
+          echo "project_id=${PID}" >> $GITHUB_OUTPUT
 
       - name: Gate staging deploy
         id: gate
@@ -225,7 +233,11 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const body = `ℹ️ Déploiement staging ignoré.\n\nMotifs possibles :\n- PR depuis un *fork* (les secrets ne sont pas exposés).\n- Identifiants GCP manquants (GCP_SA_KEY ou WORKLOAD_IDENTITY_PROVIDER).\n\nAction proposée :\n- Pour déployer, ouvrez la PR depuis une branche interne, ou configurez Workload Identity et mettez \`WORKLOAD_IDENTITY_PROVIDER\` en Variables du dépôt.`;
+            const hasSa = Boolean(process.env.GCP_SA_KEY);
+            const hasWif = Boolean(process.env.WORKLOAD_IDENTITY_PROVIDER);
+            const missing = [!hasSa ? 'GCP_SA_KEY' : null, !hasWif ? 'WORKLOAD_IDENTITY_PROVIDER' : null].filter(Boolean).join(', ');
+            const detail = missing ? `Manquants: ${missing}` : 'Vérifiez les conditions du gate.';
+            const body = `ℹ️ Déploiement staging ignoré.\n\nMotifs possibles :\n- PR depuis un *fork* (les secrets ne sont pas exposés).\n- Identifiants GCP manquants (GCP_SA_KEY ou WORKLOAD_IDENTITY_PROVIDER).\n\n${detail}\n\nActions proposées :\n- Ouvrez la PR depuis une branche interne (pas un fork).\n- Configurez Workload Identity et mettez WORKLOAD_IDENTITY_PROVIDER (Variables), ou ajoutez GCP_SA_KEY (Secret).`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
