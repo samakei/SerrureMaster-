@@ -1,59 +1,40 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Récupère une variable depuis import.meta.env (Vite) sans ts-ignore ni process.env côté client
-const getEnvVar = (keys: string[]): string | undefined => {
-  const env = (import.meta as any)?.env;
-  if (env) {
-    for (const key of keys) {
-      const val = env[key];
-      if (typeof val === 'string' && val) return val;
-    }
-  }
-  return undefined;
-};
+// Récupération directe des variables d'environnement Vite
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Ordre de priorité : NEXT_PUBLIC_ (Votre config) > VITE_ (Standard Vite) > REACT_APP_ (Legacy)
-const supabaseUrl = getEnvVar([
-  'NEXT_PUBLIC_SUPABASE_URL',
-  'VITE_SUPABASE_URL',
-  'REACT_APP_SUPABASE_URL',
-]);
-
-const supabaseKey = getEnvVar([
-  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-  'VITE_SUPABASE_ANON_KEY',
-  'REACT_APP_SUPABASE_ANON_KEY',
-]);
-
+// Validation des variables requises
 if (!supabaseUrl || !supabaseKey) {
   const missing: string[] = [];
   if (!supabaseUrl) missing.push('VITE_SUPABASE_URL');
   if (!supabaseKey) missing.push('VITE_SUPABASE_ANON_KEY');
-  const mode = (import.meta as any)?.env?.MODE;
-  const msg =
-    mode === 'production'
-      ? `Configuration Supabase manquante: ${missing.join(
-          ', '
-        )}. Vous exécutez un build/preview (mode production). Ajoutez ces variables dans .env.production.local puis relancez: npm run build && npm run preview.`
-      : `Configuration Supabase manquante: ${missing.join(
-          ', '
-        )}. Ajoutez-les dans .env.local puis redémarrez le serveur: npm run dev.`;
-  // Lever une erreur explicite pour éviter des requêtes vers un domaine placeholder
+
+  console.error('❌ Variables Supabase manquantes:', missing.join(', '));
+  console.error('📋 Variables actuelles:', {
+    VITE_SUPABASE_URL: supabaseUrl || '(vide)',
+    VITE_SUPABASE_ANON_KEY: supabaseKey ? `${supabaseKey.substring(0, 20)}...` : '(vide)',
+    MODE: import.meta.env.MODE,
+  });
+
+  const isProduction = import.meta.env.MODE === 'production';
+  const msg = isProduction
+    ? `⚠️ Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.production.local puis: npm run build && npm run preview`
+    : `⚠️ Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.local puis: npm run dev`;
+
   throw new Error(msg);
 }
 
-// Debug non intrusif pour diagnostiquer les envs (n'affiche pas la clé)
-(() => {
-  const mode = (import.meta as any)?.env?.MODE;
-  let host = supabaseUrl;
-  try {
-    host = new URL(supabaseUrl as string).host;
-  } catch {
-    host = String((supabaseUrl as string) ?? '');
-  }
-  console.info(`[Supabase] mode=${mode} url_host=${host}`);
-})();
+// Log de démarrage (sans exposer les clés)
+console.info('✅ Supabase client initialisé:', {
+  url: new URL(supabaseUrl).host,
+  keyFormat: supabaseKey.startsWith('sb_publishable_')
+    ? 'publishable'
+    : supabaseKey.startsWith('eyJ')
+      ? 'JWT'
+      : 'unknown',
+  mode: import.meta.env.MODE,
+});
 
-// Création du client
-// La Service Role Key n'est JAMAIS utilisée ici pour des raisons de sécurité
+// Création du client Supabase
 export const supabase = createClient(supabaseUrl, supabaseKey);
