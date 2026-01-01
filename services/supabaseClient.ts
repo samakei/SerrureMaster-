@@ -34,6 +34,16 @@ if (!supabaseUrl || !supabaseKey) {
   throw new Error(msg);
 }
 
+// Debug non intrusif pour diagnostiquer les envs (n'affiche pas la clé)
+(() => {
+  const mode = (import.meta as any)?.env?.MODE;
+  let host = supabaseUrl;
+  try {
+    host = new URL(supabaseUrl as string).host;
+  } catch {}
+  console.info(`[Supabase] mode=${mode} url_host=${host}`);
+})();
+
 // Création du client
 // La Service Role Key n'est JAMAIS utilisée ici pour des raisons de sécurité
 export const supabase = createClient(supabaseUrl, supabaseKey);
