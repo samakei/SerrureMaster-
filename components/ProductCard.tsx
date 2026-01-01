@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { CheckCircle, XCircle, MessageCircle, ShoppingCart, Shield } from 'lucide-react';
+import { CheckCircle, XCircle, MessageCircle, Shield } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../contexts/CartContext';
 

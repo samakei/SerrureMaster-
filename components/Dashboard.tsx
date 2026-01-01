@@ -10,15 +10,11 @@ import {
   CheckCircle,
   ShieldAlert,
   X,
-  Shield,
   MessageCircle,
   Wrench,
-  Eye,
   XCircle,
   ChevronRight,
-  FileWarning,
   Star,
-  PenTool,
 } from 'lucide-react';
 import { generateSecureLink } from '../services/securityService';
 import { useProducts } from '../contexts/ProductContext';
@@ -95,8 +91,6 @@ const DynamicWatermark: React.FC<{ userId: string }> = ({ userId }) => {
 
   return (
     // Dynamic position styles are required - cannot be moved to CSS file
-    // eslint-disable-next-line react/forbid-component-props
-    // eslint-disable-next-line react/no-inline-styles
     <div
       className={`absolute pointer-events-none select-none z-30 transition-all duration-[3500ms] ease-in-out ${posClass} ${opacityClass}`}
     >
@@ -133,7 +127,7 @@ const SecureFileDownload: React.FC<{
 
   // For Videos (Legacy/Mock logic as they don't have resource management yet)
   // We assume videos are always available if they exist in the product definition
-  const isVideoAvailable = isVideo;
+  // const isVideoAvailable = isVideo; // not used; legacy placeholder removed
 
   const handleInteraction = () => {
     if (!isVideo && !isAvailable) return; // Do nothing if PDF unavailable

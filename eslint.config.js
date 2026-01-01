@@ -32,6 +32,8 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
       'react/react-in-jsx-scope': 'off',
+      'react/no-inline-styles': 'off',
+      'react/forbid-component-props': 'off',
     },
   },
   {

@@ -72,7 +72,7 @@ const SerrureMasterApp = () => {
   const [user, setUser] = useState<User | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [showCookieBanner, setShowCookieBanner] = useState(false);
-  const [cookieConsent, setCookieConsent] = useState<CookiePreferences | null>(null);
+  const [, setCookieConsent] = useState<CookiePreferences | null>(null);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [currentProductId, setCurrentProductId] = useState<string | null>(null);
 
@@ -195,7 +195,7 @@ const SerrureMasterApp = () => {
         if (session?.user?.email) {
           await fetchUserProfile(session.user.id, session.user.email);
         }
-      } catch (err) {
+      } catch {
         console.warn(
           'Auth check skipped or failed (Offline/Demo mode). App will start in guest mode.'
         );

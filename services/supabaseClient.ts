@@ -1,28 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Fonction utilitaire robuste pour récupérer les variables d'environnement
-// Compatible Vite (import.meta.env) et Node/CRA (process.env)
+// Récupère une variable depuis import.meta.env (Vite) sans ts-ignore ni process.env côté client
 const getEnvVar = (keys: string[]): string | undefined => {
-  // 1. Essayer Vite (import.meta.env)
-  // @ts-ignore
-  if (typeof import.meta !== 'undefined' && import.meta.env) {
+  const env = (import.meta as any)?.env;
+  if (env) {
     for (const key of keys) {
-      // @ts-ignore
-      const val = import.meta.env[key];
-      if (val) return val;
+      const val = env[key];
+      if (typeof val === 'string' && val) return val;
     }
   }
-  
-  // 2. Essayer Process (process.env) pour compatibilité
-  // @ts-ignore
-  if (typeof process !== 'undefined' && process.env) {
-    for (const key of keys) {
-      // @ts-ignore
-      const val = process.env[key];
-      if (val) return val;
-    }
-  }
-  
   return undefined;
 };
 

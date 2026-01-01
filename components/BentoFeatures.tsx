@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Zap, Smartphone, Wrench, Scale } from 'lucide-react';
+import { Zap, Smartphone, Wrench, Scale } from 'lucide-react';
 
 export const BentoFeatures = () => {
   return (
