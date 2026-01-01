@@ -1,8 +1,7 @@
-
 export enum ProductType {
   PDF = 'PDF',
   VIDEO = 'VIDEO',
-  BUNDLE = 'BUNDLE'
+  BUNDLE = 'BUNDLE',
 }
 
 export type ResourceStatus = 'draft' | 'published' | 'archived';
@@ -25,7 +24,8 @@ export interface Product {
   price: number;
   originalPrice?: number; // Added for strike-through price
   features: string[]; // "Inclus" section
-  compatibility?: { // New section for "Compatibilité"
+  compatibility?: {
+    // New section for "Compatibilité"
     valid: string[];
     invalid: string[];
   };
@@ -88,7 +88,7 @@ export interface ChatMessage {
   text: string;
   timestamp: number;
 }
- 
+
 export interface AdminLog {
   id: string;
   timestamp: string;

@@ -7,13 +7,7 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: [
-      '**/build/**',
-      '**/dist/**',
-      '**/dist_old/**',
-      '**/public/**',
-      '**/node_modules/**',
-    ],
+    ignores: ['**/build/**', '**/dist/**', '**/dist_old/**', '**/public/**', '**/node_modules/**'],
     linterOptions: { reportUnusedDisableDirectives: 'off', noInlineConfig: true },
   },
   js.configs.recommended,
@@ -74,7 +68,13 @@ export default [
     },
   },
   {
-    files: ['**/*.js', '**/*.mjs', 'vitest.config.ts', 'verify-stripe-config.js', 'get-stripe-prices.mjs'],
+    files: [
+      '**/*.js',
+      '**/*.mjs',
+      'vitest.config.ts',
+      'verify-stripe-config.js',
+      'get-stripe-prices.mjs',
+    ],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

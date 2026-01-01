@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Mail,
-  ArrowRight,
-  ShieldCheck,
-  Loader2,
-  AlertCircle,
-  Unlock,
-} from 'lucide-react';
+import { Mail, ArrowRight, ShieldCheck, Loader2, AlertCircle, Unlock } from 'lucide-react';
 import { LOGO_URL, APP_NAME } from '../constants';
 import { supabase } from '../services/supabaseClient';
 

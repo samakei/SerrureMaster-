@@ -22,7 +22,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
         if (parsed.logo) setLogo(parsed.logo);
         if (parsed.heroImage) setHeroImage(parsed.heroImage);
       } catch (e) {
-        console.error("Erreur chargement paramètres", e);
+        console.error('Erreur chargement paramètres', e);
       }
     }
   }, []);
@@ -48,7 +48,9 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   };
 
   return (
-    <SettingsContext.Provider value={{ logo, heroImage, updateLogo, updateHeroImage, resetSettings }}>
+    <SettingsContext.Provider
+      value={{ logo, heroImage, updateLogo, updateHeroImage, resetSettings }}
+    >
       {children}
     </SettingsContext.Provider>
   );

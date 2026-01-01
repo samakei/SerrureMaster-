@@ -935,8 +935,8 @@ export const AdminDashboard: React.FC<{
                               log.severity === 'danger'
                                 ? 'bg-red-500/10 text-red-500'
                                 : log.severity === 'warning'
-                                ? 'bg-orange-500/10 text-orange-500'
-                                : 'bg-blue-500/10 text-blue-500'
+                                  ? 'bg-orange-500/10 text-orange-500'
+                                  : 'bg-blue-500/10 text-blue-500'
                             }`}
                           >
                             {log.action}

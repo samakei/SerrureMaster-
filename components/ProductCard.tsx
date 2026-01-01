@@ -118,8 +118,8 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product, is
               isOwned
                 ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border-2 border-green-300 cursor-default shadow-green-200'
                 : isInCart
-                ? 'bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 border-2 border-slate-300 cursor-default shadow-slate-300'
-                : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 shadow-orange-500/50 hover:shadow-orange-500/80 border-2 border-orange-400 hover:rotate-3'
+                  ? 'bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 border-2 border-slate-300 cursor-default shadow-slate-300'
+                  : 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 shadow-orange-500/50 hover:shadow-orange-500/80 border-2 border-orange-400 hover:rotate-3'
             }`}
           >
             {isOwned ? (

@@ -149,9 +149,12 @@ const SecureFileDownload: React.FC<{
     if (response.success && response.url) {
       setStatus('ready');
       window.open(response.url, '_blank');
-      setTimeout(() => {
-        setStatus('idle');
-      }, 15 * 60 * 1000);
+      setTimeout(
+        () => {
+          setStatus('idle');
+        },
+        15 * 60 * 1000
+      );
     } else {
       setStatus('error');
       setErrorMsg(response.error || 'Erreur inconnue');
@@ -286,8 +289,8 @@ const SecureFileDownload: React.FC<{
           isDisabled
             ? 'bg-slate-50 border-slate-200 opacity-70 cursor-not-allowed'
             : status === 'error'
-            ? 'bg-red-50 border-red-200'
-            : 'bg-white border-slate-200 hover:border-orange-500 hover:shadow-md cursor-pointer'
+              ? 'bg-red-50 border-red-200'
+              : 'bg-white border-slate-200 hover:border-orange-500 hover:shadow-md cursor-pointer'
         }`}
       >
         <div className="flex items-center justify-between">
@@ -297,8 +300,8 @@ const SecureFileDownload: React.FC<{
                 isDisabled
                   ? 'bg-slate-200 text-slate-400'
                   : isVideo
-                  ? 'bg-red-100 text-red-600'
-                  : 'bg-blue-100 text-blue-600'
+                    ? 'bg-red-100 text-red-600'
+                    : 'bg-blue-100 text-blue-600'
               }`}
             >
               {isVideo ? <Play className="w-5 h-5" /> : <FileText className="w-5 h-5" />}

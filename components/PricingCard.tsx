@@ -22,10 +22,10 @@ export const PricingCard: React.FC<PricingCardProps> = ({ product, onBuy, isOwne
           -80% vs Intervention
         </p>
       </div>
-      
+
       <div className="p-6 flex-1 flex flex-col">
         <p className="text-slate-600 mb-6 text-sm min-h-[40px]">{product.description}</p>
-        
+
         <div className="space-y-4 mb-8 flex-1">
           <div className="flex items-center text-sm font-semibold text-slate-800">
             <FileText className="w-4 h-4 mr-2 text-blue-600" />
@@ -48,8 +48,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({ product, onBuy, isOwne
           onClick={() => onBuy(product)}
           disabled={isOwned}
           className={`w-full py-4 rounded-lg font-bold text-center transition-all flex justify-center items-center ${
-            isOwned 
-              ? 'bg-green-100 text-green-700 cursor-default' 
+            isOwned
+              ? 'bg-green-100 text-green-700 cursor-default'
               : 'bg-slate-900 text-white hover:bg-orange-600 shadow-lg hover:shadow-orange-500/30'
           }`}
         >
@@ -59,14 +59,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({ product, onBuy, isOwne
               Déjà acheté
             </>
           ) : (
-            "Obtenir le Plan"
+            'Obtenir le Plan'
           )}
         </button>
-        
+
         {!isOwned && (
-           <p className="text-xs text-center text-slate-400 mt-3 flex justify-center items-center">
-             <Zap className="w-3 h-3 mr-1 text-orange-500" /> Accès immédiat après paiement
-           </p>
+          <p className="text-xs text-center text-slate-400 mt-3 flex justify-center items-center">
+            <Zap className="w-3 h-3 mr-1 text-orange-500" /> Accès immédiat après paiement
+          </p>
         )}
       </div>
     </div>

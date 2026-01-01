@@ -1,28 +1,27 @@
 // @ts-nocheck
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import Stripe from "https://esm.sh/stripe@14.21.0";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import Stripe from 'https://esm.sh/stripe@14.21.0';
 
 // Fix: Declare Deno global to resolve type error when Deno namespace is not available in the editor context
 declare const Deno: any;
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 serve(async (req: Request) => {
   // 1. Gérer les requêtes CORS (Preflight OPTIONS)
   // Indispensable pour que le frontend (localhost ou vercel) puisse appeler cette fonction
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     // 2. Initialisation de Stripe
     // La clé secrète doit être configurée dans les variables d'environnement Supabase
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") as string, {
-      apiVersion: "2023-10-16",
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') as string, {
+      apiVersion: '2023-10-16',
       httpClient: Stripe.createFetchHttpClient(),
     });
 
@@ -30,7 +29,7 @@ serve(async (req: Request) => {
     const { items, userId, successUrl, cancelUrl } = await req.json();
 
     if (!items || items.length === 0) {
-      throw new Error("Le panier est vide");
+      throw new Error('Le panier est vide');
     }
 
     // 4. Construction des articles pour Stripe
@@ -41,15 +40,13 @@ serve(async (req: Request) => {
       quantity: item.quantity,
     }));
 
-    console.log(
-      `Création de session pour User: ${userId} avec ${lineItems.length} articles`
-    );
+    console.log(`Création de session pour User: ${userId} avec ${lineItems.length} articles`);
 
     // 5. Création de la Session Stripe Checkout
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      payment_method_types: ['card'],
       line_items: lineItems,
-      mode: "payment",
+      mode: 'payment',
       success_url: successUrl,
       cancel_url: cancelUrl,
       client_reference_id: userId,
@@ -62,13 +59,13 @@ serve(async (req: Request) => {
 
     // 6. Réponse au Frontend avec l'URL de redirection
     return new Response(JSON.stringify({ url: session.url }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     });
   } catch (error: any) {
-    console.error("Erreur Stripe Checkout:", error.message);
+    console.error('Erreur Stripe Checkout:', error.message);
     return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 400,
     });
   }
