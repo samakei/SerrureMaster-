@@ -82,6 +82,15 @@ const SerrureMasterApp = () => {
   const { items, clearCart, toggleCart } = useCart();
   const { products } = useProducts();
 
+  const devMode = (import.meta as any)?.env?.MODE === 'development';
+  const supaUrl = (import.meta as any)?.env?.VITE_SUPABASE_URL as string | undefined;
+  let supaHost = '';
+  try {
+    supaHost = new URL(supaUrl || '').host;
+  } catch {
+    supaHost = supaUrl || '';
+  }
+
   // --- SEO: Update Document Title ---
   useEffect(() => {
     let pageTitle = APP_NAME;
@@ -644,6 +653,12 @@ const SerrureMasterApp = () => {
           onSavePreferences={handleCookieChoice}
           onLearnMore={() => setCurrentPage('privacy')}
         />
+      )}
+
+      {devMode && (
+        <div className="fixed bottom-2 left-2 z-[300] px-3 py-2 text-xs rounded bg-slate-900/80 text-slate-100 border border-slate-700 shadow">
+          Dev • Supabase: {supaHost || 'non défini'}
+        </div>
       )}
     </Layout>
   );
