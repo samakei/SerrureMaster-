@@ -181,7 +181,6 @@ export const Hero: React.FC<{ onCtaClick: () => void }> = React.memo(({ onCtaCli
                         src={featuredProductImage}
                         className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
                         alt="Secure Content"
-                        loading="eager"
                         {...({ fetchpriority: 'high' } as any)}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
