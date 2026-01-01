@@ -7,7 +7,17 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['**/build/**', '**/dist/**', '**/dist_old/**', '**/public/**', '**/node_modules/**'],
+    ignores: [
+      '**/build/**',
+      '**/dist/**',
+      '**/dist_old/**',
+      '**/public/**',
+      '**/node_modules/**',
+      '**/coverage/**',
+      '**/*.min.js',
+      // Supabase functions peuvent être lintées séparément au besoin
+      // '**/supabase/functions/**',
+    ],
     linterOptions: { reportUnusedDisableDirectives: 'off', noInlineConfig: true },
   },
   js.configs.recommended,

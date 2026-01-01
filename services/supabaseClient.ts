@@ -29,7 +29,15 @@ if (!supabaseUrl || !supabaseKey) {
   const missing: string[] = [];
   if (!supabaseUrl) missing.push('VITE_SUPABASE_URL');
   if (!supabaseKey) missing.push('VITE_SUPABASE_ANON_KEY');
-  const msg = `Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.local puis redémarrez le serveur (npm run dev).`;
+  const mode = (import.meta as any)?.env?.MODE;
+  const msg =
+    mode === 'production'
+      ? `Configuration Supabase manquante: ${missing.join(
+          ', '
+        )}. Vous exécutez un build/preview (mode production). Ajoutez ces variables dans .env.production.local puis relancez: npm run build && npm run preview.`
+      : `Configuration Supabase manquante: ${missing.join(
+          ', '
+        )}. Ajoutez-les dans .env.local puis redémarrez le serveur: npm run dev.`;
   // Lever une erreur explicite pour éviter des requêtes vers un domaine placeholder
   throw new Error(msg);
 }
@@ -40,7 +48,9 @@ if (!supabaseUrl || !supabaseKey) {
   let host = supabaseUrl;
   try {
     host = new URL(supabaseUrl as string).host;
-  } catch {}
+  } catch {
+    host = String((supabaseUrl as string) ?? '');
+  }
   console.info(`[Supabase] mode=${mode} url_host=${host}`);
 })();
 
