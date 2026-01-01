@@ -4,7 +4,6 @@ import {
   ArrowRight,
   ShieldCheck,
   Loader2,
-  CheckCircle,
   AlertCircle,
   Unlock,
 } from 'lucide-react';

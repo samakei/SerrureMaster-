@@ -1,19 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  User,
-  AdminLog,
-  DailySales,
-  Product,
-  Testimonial,
-  ResourceStatus,
-  CourseContent,
-  Lesson,
-} from '../types';
+import { User, AdminLog, DailySales, Product } from '../types';
 import { getAdminStats } from '../services/adminService';
 import { useProducts } from '../contexts/ProductContext';
-import { useSettings } from '../contexts/SettingsContext';
+// import { useSettings } from '../contexts/SettingsContext';
 import { useTestimonials } from '../contexts/TestimonialContext';
-import { LOGO_URL, APP_NAME } from '../constants';
+import { LOGO_URL } from '../constants';
 import {
   LayoutDashboard,
   Users,
@@ -21,26 +12,15 @@ import {
   DollarSign,
   Activity,
   ShieldAlert,
-  Search,
   AlertTriangle,
-  Download,
-  MoreVertical,
-  Unlock,
-  Ban,
   FileText,
   LogOut,
   ShoppingBag,
   Upload,
-  Image as ImageIcon,
-  RefreshCw,
   Save,
-  Edit3,
   Check,
   Loader2,
-  Settings,
-  ImageOff,
   XCircle,
-  MousePointerClick,
   MessageSquare,
   Star,
   Trash2,
@@ -50,10 +30,7 @@ import {
   FileWarning,
   Video,
   Plus,
-  ChevronDown,
-  ChevronRight,
   PlayCircle,
-  MessageCircle,
 } from 'lucide-react';
 
 // Fonction utilitaire de compression d'image optimisée pour LocalStorage
@@ -375,7 +352,7 @@ const CourseManager: React.FC<{ product: Product }> = ({ product }) => {
 
             {/* Lessons List */}
             <div className="divide-y divide-slate-700/50">
-              {mod.lessons.map((les, lIdx) => (
+              {mod.lessons.map((les) => (
                 <div
                   key={les.id}
                   className="p-3 flex items-center justify-between hover:bg-slate-700/30 transition group"

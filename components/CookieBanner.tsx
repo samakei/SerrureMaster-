@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cookie, Check, X, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
+import { Check, ShieldCheck } from 'lucide-react';
 
 export interface CookiePreferences {
   necessary: boolean;

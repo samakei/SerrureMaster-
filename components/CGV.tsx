@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, ShieldCheck, Scale, Mail, Server } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Scale } from 'lucide-react';
 
 export const CGV: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   return (

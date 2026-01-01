@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Lock, Database, Eye, Server, Mail, ShieldCheck, Clock, Share2, Scale, Cookie } from 'lucide-react';
+import { ArrowLeft, Lock, Database, Mail, ShieldCheck, Clock, Share2, Scale, Cookie } from 'lucide-react';
 
 export const PrivacyPolicy: React.FC<{ onBack: () => void }> = ({ onBack }) => {
   return (

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { User, CourseContent, Lesson, Module } from '../types';
+import { User, CourseContent, Lesson } from '../types';
 import { useProducts } from '../contexts/ProductContext';
 import { PRODUCTS } from '../constants';
 import {
   PlayCircle,
   CheckCircle,
-  Lock,
   AlertTriangle,
   ArrowLeft,
   MessageCircle,
@@ -138,7 +137,7 @@ export const CoursePlayer: React.FC<CoursePlayerProps> = ({ user, productId, onB
 
               {expandedModules[module.id] && (
                 <div className="border-t border-slate-800/50">
-                  {module.lessons.map((lesson, lIdx) => {
+                  {module.lessons.map((lesson) => {
                     const isActive = activeLesson.id === lesson.id;
                     return (
                       <button

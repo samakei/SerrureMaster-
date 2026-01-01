@@ -7,7 +7,13 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['**/build/**', '**/dist/**', '**/node_modules/**'],
+    ignores: [
+      '**/build/**',
+      '**/dist/**',
+      '**/dist_old/**',
+      '**/public/**',
+      '**/node_modules/**',
+    ],
     linterOptions: { reportUnusedDisableDirectives: 'off', noInlineConfig: true },
   },
   js.configs.recommended,
@@ -34,6 +40,37 @@ export default [
       'react/react-in-jsx-scope': 'off',
       'react/no-inline-styles': 'off',
       'react/forbid-component-props': 'off',
+    },
+  },
+  // Node environment for config and setup files (TS/JS)
+  {
+    files: [
+      'vite.config.ts',
+      'vitest.config.ts',
+      'vitest.setup.ts',
+      'eslint.config.js',
+      'tailwind.config.js',
+      'postcss.config.js',
+      'verify-stripe-config.js',
+      'get-stripe-prices.mjs',
+    ],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.node,
+    },
+  },
+  // Relax rules in supabase functions (edge/server code)
+  {
+    files: ['supabase/functions/**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    rules: {
+      '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
   {

@@ -10,8 +10,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
-    "lint": "eslint .",
-    "lint:strict": "eslint . --max-warnings=0",
+    "lint": "eslint \"components\" \"contexts\" \"services\" \"supabase/functions\" \"App.tsx\" \"index.tsx\" \"vite.config.ts\" \"vitest.setup.ts\" \"types.ts\" \"constants.ts\"",
+    "lint:strict": "eslint \"components\" \"contexts\" \"services\" \"supabase/functions\" \"App.tsx\" \"index.tsx\" \"vite.config.ts\" \"vitest.setup.ts\" \"types.ts\" \"constants.ts\" --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

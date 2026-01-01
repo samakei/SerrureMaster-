@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Info, CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Info, CheckCircle } from 'lucide-react';
 
 export const DoorDirectionHelper: React.FC = () => {
   const [selection, setSelection] = useState<'droite' | 'gauche' | null>(null);

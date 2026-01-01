@@ -11,7 +11,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
-import { DEFAULT_HERO_IMAGE, PRODUCTS } from '../constants';
+import { PRODUCTS } from '../constants';
 
 export const Hero: React.FC<{ onCtaClick: () => void }> = React.memo(({ onCtaClick }) => {
   const { heroImage } = useSettings();
@@ -240,7 +240,6 @@ export const Hero: React.FC<{ onCtaClick: () => void }> = React.memo(({ onCtaCli
             </div>
 
             {/* Floating Badges */}
-            {/* eslint-disable-next-line react/forbid-component-props */}
             <div className="absolute top-[20%] -right-6 z-40 bg-slate-800/90 backdrop-blur border border-slate-700 p-3 rounded-xl shadow-xl animate-float delay-0">
               <div className="flex items-center gap-3">
                 <div className="bg-green-500/20 p-2 rounded-full text-green-500 border border-green-500/30">
@@ -253,7 +252,6 @@ export const Hero: React.FC<{ onCtaClick: () => void }> = React.memo(({ onCtaCli
               </div>
             </div>
 
-            {/* eslint-disable-next-line react/forbid-component-props */}
             <div className="absolute bottom-[25%] -left-8 z-40 bg-slate-800/90 backdrop-blur border border-slate-700 p-3 rounded-xl shadow-xl animate-float delay-2000">
               <div className="flex items-center gap-3">
                 <div className="bg-blue-500/20 p-2 rounded-full text-blue-400 border border-blue-500/30">
