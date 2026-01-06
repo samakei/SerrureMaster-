@@ -201,7 +201,7 @@ jobs:
 
       - name: Comment PR with staging URL
         if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'true' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const url = "${{ steps.deploy.outputs.url }}";
@@ -220,7 +220,7 @@ jobs:
 
       - name: Comment PR when VITE variables missing
         if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'true' && steps.vite.outputs.vite_ready == 'false' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const missing = "${{ steps.vite.outputs.missing }}";
@@ -234,7 +234,7 @@ jobs:
 
       - name: Comment PR when staging skipped
         if: ${{ github.event_name == 'pull_request' && steps.gate.outputs.should_deploy == 'false' && github.event.pull_request.head.repo.full_name == github.repository }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const hasSa = Boolean(process.env.GCP_SA_KEY);
