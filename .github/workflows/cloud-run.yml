@@ -26,43 +26,36 @@ jobs:
         with:
           node-version: '20.19.0'
 
-      - name: Resolve and decode GCP credentials
+      - name: Setup GCP credentials file
         env:
-          S_GCP_SA_KEY_B64: ${{ secrets.GCP_SA_KEY }}
-          S_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          S_GCP_REGION: ${{ secrets.GCP_REGION }}
+          GCP_SA_KEY_JSON: ${{ secrets.GCP_SA_KEY }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          GCP_REGION: ${{ secrets.GCP_REGION }}
         run: |
-          # Décoder le JSON depuis Base64 (robuste à espaces/newlines)
-          if [ -n "${S_GCP_SA_KEY_B64}" ]; then
-            # Nettoyer les espaces/newlines et décoder
-            echo "${S_GCP_SA_KEY_B64}" | tr -d ' \n' | base64 -d > /tmp/sa_key.json 2>/dev/null || \
-            echo "${S_GCP_SA_KEY_B64}" | base64 -d > /tmp/sa_key.json 2>/dev/null || \
-            (echo "❌ Erreur décodage Base64"; exit 1)
-            
-            # Valider le JSON
-            if command -v jq &> /dev/null; then
-              jq . /tmp/sa_key.json > /dev/null 2>&1 && echo "✅ JSON valide" || (echo "❌ JSON invalide après décodage"; exit 1)
-            else
-              echo "✅ Base64 décodé (jq non disponible, skip validation)"
-            fi
-            
-            echo "GCP_SA_KEY=$(cat /tmp/sa_key.json)" >> $GITHUB_ENV
+          # Écrire le JSON dans un fichier
+          echo "$GCP_SA_KEY_JSON" > /tmp/sa_key.json
+
+          # Valider le JSON
+          if command -v jq &> /dev/null; then
+            jq . /tmp/sa_key.json > /dev/null 2>&1 && echo "✅ JSON valide" || (echo "❌ JSON invalide"; cat /tmp/sa_key.json; exit 1)
           fi
-          [ -n "${S_GCP_PROJECT_ID}" ] && echo "GCP_PROJECT_ID=${S_GCP_PROJECT_ID}" >> $GITHUB_ENV
-          [ -n "${S_GCP_REGION}" ] && echo "GCP_REGION=${S_GCP_REGION}" >> $GITHUB_ENV
+
+          echo "GCP_SA_KEY_FILE=/tmp/sa_key.json" >> $GITHUB_ENV
+          echo "GCP_PROJECT_ID=${GCP_PROJECT_ID}" >> $GITHUB_ENV
+          [ -n "${GCP_REGION}" ] && echo "GCP_REGION=${GCP_REGION}" >> $GITHUB_ENV || echo "GCP_REGION=europe-west1" >> $GITHUB_ENV
 
       - name: Validate GCP credentials
         run: |
-          if [ -z "${GCP_SA_KEY}" ]; then
-            echo "❌ GCP_SA_KEY not found. Check GitHub Secrets (must be Base64-encoded)."
+          if [ ! -f "/tmp/sa_key.json" ]; then
+            echo "❌ GCP credentials file not found. Check GitHub Secret: GCP_SA_KEY (must be JSON)"
             exit 1
           fi
-          echo "✅ GCP credentials loaded"
+          echo "✅ GCP credentials ready"
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
