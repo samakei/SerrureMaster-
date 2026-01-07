@@ -13,7 +13,7 @@ if (typeof window !== 'undefined' && typeof (window as any).chrome !== 'undefine
         // Respond synchronously to prevent "channel closed" errors
         try {
           sendResponse({ received: true });
-        } catch (e) {
+        } catch {
           // Ignore errors from closed channels
         }
         return false; // Don't keep the channel open
