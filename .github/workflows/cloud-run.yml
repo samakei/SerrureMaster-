@@ -26,55 +26,33 @@ jobs:
         with:
           node-version: '20.19.0'
 
-      - name: Resolve GCP auth and project from secrets or variables
+      - name: Resolve and decode GCP credentials
         env:
-          S_GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-          V_GCP_SA_KEY: ${{ vars.GCP_SA_KEY }}
-          S_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-          V_WORKLOAD_IDENTITY_PROVIDER: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          S_GCP_SA_KEY_B64: ${{ secrets.GCP_SA_KEY }}
           S_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          V_GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
-          S_GCP_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
-          V_GCP_SERVICE_ACCOUNT_EMAIL: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
+          S_GCP_REGION: ${{ secrets.GCP_REGION }}
         run: |
-          val="${S_GCP_SA_KEY}"; if [ -z "$val" ]; then val="${V_GCP_SA_KEY}"; fi
-          if [ -n "$val" ]; then echo "GCP_SA_KEY=$val" >> $GITHUB_ENV; fi
-          wip="${S_WORKLOAD_IDENTITY_PROVIDER}"; if [ -z "$wip" ]; then wip="${V_WORKLOAD_IDENTITY_PROVIDER}"; fi; echo "WORKLOAD_IDENTITY_PROVIDER=$wip" >> $GITHUB_ENV
-          pid="${S_GCP_PROJECT_ID}"; if [ -z "$pid" ]; then pid="${V_GCP_PROJECT_ID}"; fi; echo "GCP_PROJECT_ID=$pid" >> $GITHUB_ENV
-          sa="${S_GCP_SERVICE_ACCOUNT_EMAIL}"; if [ -z "$sa" ]; then sa="${V_GCP_SERVICE_ACCOUNT_EMAIL}"; fi; echo "GCP_SERVICE_ACCOUNT_EMAIL=$sa" >> $GITHUB_ENV
+          # Décoder le JSON depuis Base64
+          if [ -n "${S_GCP_SA_KEY_B64}" ]; then
+            echo "${S_GCP_SA_KEY_B64}" | base64 -d > /tmp/sa_key.json
+            cat /tmp/sa_key.json | jq . > /dev/null && echo "✅ JSON valide" || (echo "❌ JSON invalide" && exit 1)
+            echo "GCP_SA_KEY=$(cat /tmp/sa_key.json)" >> $GITHUB_ENV
+          fi
+          [ -n "${S_GCP_PROJECT_ID}" ] && echo "GCP_PROJECT_ID=${S_GCP_PROJECT_ID}" >> $GITHUB_ENV
+          [ -n "${S_GCP_REGION}" ] && echo "GCP_REGION=${S_GCP_REGION}" >> $GITHUB_ENV
 
-      - name: Debug resolved GCP inputs (masked)
+      - name: Validate GCP credentials
         run: |
-          echo "GCP_SA_KEY set?            ${GCP_SA_KEY:+yes}"
-          echo "WORKLOAD_IDENTITY_PROVIDER set? ${WORKLOAD_IDENTITY_PROVIDER:+yes}"
-          echo "GCP_PROJECT_ID present?   ${GCP_PROJECT_ID:+yes}"
-          echo "GCP_SERVICE_ACCOUNT_EMAIL set? ${GCP_SERVICE_ACCOUNT_EMAIL:+yes}"
-
-      - name: Validate GCP auth inputs
-        run: |
-          if [ -z "${GCP_SA_KEY}" ] && [ -z "${WORKLOAD_IDENTITY_PROVIDER}" ]; then
-            echo "❌ Aucun identifiant GCP fourni."
-            echo "Configurez un secret repo 'GCP_SA_KEY' (JSON) ou 'WORKLOAD_IDENTITY_PROVIDER'."
+          if [ -z "${GCP_SA_KEY}" ]; then
+            echo "❌ GCP_SA_KEY not found. Check GitHub Secrets (must be Base64-encoded)."
             exit 1
           fi
-          if [ -z "${GCP_SA_KEY}" ] && [ -n "${WORKLOAD_IDENTITY_PROVIDER}" ] && [ -z "${GCP_SERVICE_ACCOUNT_EMAIL}" ]; then
-            echo "❌ Workload Identity configuré sans service account email."
-            echo "Ajoutez 'GCP_SERVICE_ACCOUNT_EMAIL' en secret ou variable (ex: github-deploy@<projet>.iam.gserviceaccount.com)."
-            exit 1
-          fi
+          echo "✅ GCP credentials loaded"
 
       - name: Authenticate to Google Cloud
-        if: ${{ env.GCP_SA_KEY != '' }}
         uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ env.GCP_SA_KEY }}
-
-      - name: Authenticate to Google Cloud via Workload Identity
-        if: ${{ env.GCP_SA_KEY == '' && env.WORKLOAD_IDENTITY_PROVIDER != '' }}
-        uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ env.GCP_SERVICE_ACCOUNT_EMAIL }}
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
