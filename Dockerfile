@@ -37,8 +37,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Copy built assets and ensure proper permissions
 COPY --from=builder /app/build /usr/share/nginx/html
 RUN chmod -R 755 /usr/share/nginx/html && \
-    chmod 644 /usr/share/nginx/html/*.html && \
-    find /usr/share/nginx/html -type f -name "*.js" -o -name "*.css" -o -name "*.json" | xargs chmod 644
+    find /usr/share/nginx/html -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" \) -exec chmod 644 {} \;
 
 # Cloud Run expects the container to listen on $PORT, default 8080
 EXPOSE 8080
