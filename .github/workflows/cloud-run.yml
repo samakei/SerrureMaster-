@@ -62,12 +62,27 @@ jobs:
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
+      - name: Normalize GCP project ID (if numeric)
+        run: |
+          PID="${GCP_PROJECT_ID}"
+          if echo "$PID" | grep -Eq '^[0-9]+$'; then
+            echo "Detected numeric project identifier: $PID"
+            NEWPID=$(gcloud projects describe "$PID" --format='value(projectId)')
+            if [ -n "$NEWPID" ]; then
+              echo "Resolved projectId: $NEWPID"
+              echo "GCP_PROJECT_ID=$NEWPID" >> $GITHUB_ENV
+            else
+              echo "❌ Unable to resolve textual projectId from number: $PID"; exit 1
+            fi
+          fi
+
       - name: Override CLOUD_RUN_SERVICE from secret
         env:
           INPUT: ${{ secrets.CLOUD_RUN_SERVICE }}
         run: |
           if [ -n "${INPUT}" ]; then
-            echo "CLOUD_RUN_SERVICE=${INPUT}" >> $GITHUB_ENV
+            TRIMMED=$(echo "${INPUT}" | sed -e 's/^ *//' -e 's/ *$//')
+            echo "CLOUD_RUN_SERVICE=${TRIMMED}" >> $GITHUB_ENV
           fi
 
       - name: Override GCP_REGION from secret
@@ -75,7 +90,8 @@ jobs:
           INPUT: ${{ secrets.GCP_REGION }}
         run: |
           if [ -n "${INPUT}" ]; then
-            echo "GCP_REGION=${INPUT}" >> $GITHUB_ENV
+            TRIMMED=$(echo "${INPUT}" | sed -e 's/^ *//' -e 's/ *$//')
+            echo "GCP_REGION=${TRIMMED}" >> $GITHUB_ENV
           fi
 
       - name: Override AR_REPO from secret
@@ -83,7 +99,8 @@ jobs:
           INPUT: ${{ secrets.AR_REPO }}
         run: |
           if [ -n "${INPUT}" ]; then
-            echo "AR_REPO=${INPUT}" >> $GITHUB_ENV
+            TRIMMED=$(echo "${INPUT}" | sed -e 's/^ *//' -e 's/ *$//')
+            echo "AR_REPO=${TRIMMED}" >> $GITHUB_ENV
           fi
 
       - name: Resolve VITE_* from secrets or variables
