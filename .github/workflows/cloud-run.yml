@@ -32,10 +32,20 @@ jobs:
           S_GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           S_GCP_REGION: ${{ secrets.GCP_REGION }}
         run: |
-          # Décoder le JSON depuis Base64
+          # Décoder le JSON depuis Base64 (robuste à espaces/newlines)
           if [ -n "${S_GCP_SA_KEY_B64}" ]; then
-            echo "${S_GCP_SA_KEY_B64}" | base64 -d > /tmp/sa_key.json
-            cat /tmp/sa_key.json | jq . > /dev/null && echo "✅ JSON valide" || (echo "❌ JSON invalide" && exit 1)
+            # Nettoyer les espaces/newlines et décoder
+            echo "${S_GCP_SA_KEY_B64}" | tr -d ' \n' | base64 -d > /tmp/sa_key.json 2>/dev/null || \
+            echo "${S_GCP_SA_KEY_B64}" | base64 -d > /tmp/sa_key.json 2>/dev/null || \
+            (echo "❌ Erreur décodage Base64"; exit 1)
+            
+            # Valider le JSON
+            if command -v jq &> /dev/null; then
+              jq . /tmp/sa_key.json > /dev/null 2>&1 && echo "✅ JSON valide" || (echo "❌ JSON invalide après décodage"; exit 1)
+            else
+              echo "✅ Base64 décodé (jq non disponible, skip validation)"
+            fi
+            
             echo "GCP_SA_KEY=$(cat /tmp/sa_key.json)" >> $GITHUB_ENV
           fi
           [ -n "${S_GCP_PROJECT_ID}" ] && echo "GCP_PROJECT_ID=${S_GCP_PROJECT_ID}" >> $GITHUB_ENV
