@@ -62,18 +62,14 @@ jobs:
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
 
-      - name: Normalize GCP project ID (if numeric)
+      - name: Validate GCP project ID (must be textual)
         run: |
           PID="${GCP_PROJECT_ID}"
+          if [ -z "$PID" ]; then echo "❌ GCP_PROJECT_ID is empty. Configure it as the textual project ID (e.g., 'serruremaster-prod')."; exit 1; fi
           if echo "$PID" | grep -Eq '^[0-9]+$'; then
-            echo "Detected numeric project identifier: $PID"
-            NEWPID=$(gcloud projects describe "$PID" --format='value(projectId)')
-            if [ -n "$NEWPID" ]; then
-              echo "Resolved projectId: $NEWPID"
-              echo "GCP_PROJECT_ID=$NEWPID" >> $GITHUB_ENV
-            else
-              echo "❌ Unable to resolve textual projectId from number: $PID"; exit 1
-            fi
+            echo "❌ GCP_PROJECT_ID must be the textual ID (e.g., 'serruremaster-prod'), not the numeric project number."
+            echo "Fix it in GitHub Secrets: Settings → Secrets and variables → Actions → GCP_PROJECT_ID"
+            exit 1
           fi
 
       - name: Override CLOUD_RUN_SERVICE from secret
