@@ -1,12 +1,23 @@
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.warn('⚠️ VITE_GEMINI_API_KEY non configurée - Le chatbot sera désactivé');
+}
+
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const sendMessageToGemini = async (
   history: { role: string; parts: { text: string }[] }[],
   message: string,
   isCustomer: boolean = false
 ): Promise<string> => {
+  // Vérification de la disponibilité de l'API
+  if (!ai) {
+    return 'Le chatbot est temporairement indisponible. Veuillez nous contacter via WhatsApp au +33 7 57 57 03 89 pour une assistance immédiate.';
+  }
+
   try {
     // Définition du contexte selon le statut de l'utilisateur
     let contextInstruction = '';
@@ -89,6 +100,10 @@ Si vous avez une autre situation ou une question générale, je reste à votre d
     });
     conversationContext += `Utilisateur: ${message}\nSerrureMaster:`;
 
+    if (!ai) {
+      throw new Error('API Gemini non disponible');
+    }
+
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: conversationContext,
@@ -99,6 +114,6 @@ Si vous avez une autre situation ou une question générale, je reste à votre d
     );
   } catch (error) {
     console.error('Gemini API Error:', error);
-    return 'Une erreur technique est survenue. Merci de réessayer plus tard.';
+    return 'Le chatbot est temporairement indisponible. Pour une assistance immédiate, contactez-nous via WhatsApp au +33 7 57 57 03 89.';
   }
 };
