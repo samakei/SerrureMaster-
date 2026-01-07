@@ -5,13 +5,21 @@ import './index.css';
 
 // Suppress extension connection errors
 if (typeof window !== 'undefined' && typeof (window as any).chrome !== 'undefined') {
-  (window as any).chrome?.runtime?.onMessage?.addListener(
-    (message: any, sender: any, sendResponse: (response?: any) => void) => {
-      // Respond immediately to avoid "channel closed" errors
-      sendResponse({ received: true });
-      return false;
-    }
-  );
+  const originalAddListener = (window as any).chrome?.runtime?.onMessage?.addListener;
+  if (originalAddListener) {
+    originalAddListener.call(
+      (window as any).chrome.runtime.onMessage,
+      (message: any, sender: any, sendResponse: (response?: any) => void) => {
+        // Respond synchronously to prevent "channel closed" errors
+        try {
+          sendResponse({ received: true });
+        } catch (e) {
+          // Ignore errors from closed channels
+        }
+        return false; // Don't keep the channel open
+      }
+    );
+  }
 }
 
 const rootElement = document.getElementById('root');
