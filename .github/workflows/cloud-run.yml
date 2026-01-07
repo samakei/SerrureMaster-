@@ -37,7 +37,12 @@ jobs:
           S_GCP_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
           V_GCP_SERVICE_ACCOUNT_EMAIL: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
         run: |
-          val="${S_GCP_SA_KEY}"; if [ -z "$val" ]; then val="${V_GCP_SA_KEY}"; fi; echo "GCP_SA_KEY=$val" >> $GITHUB_ENV
+          val="${S_GCP_SA_KEY}"; if [ -z "$val" ]; then val="${V_GCP_SA_KEY}"; fi
+          # Décoder depuis Base64 si nécessaire
+          if [ -n "$val" ]; then
+            decoded=$(echo "$val" | base64 -d 2>/dev/null || echo "$val")
+            echo "GCP_SA_KEY=$decoded" >> $GITHUB_ENV
+          fi
           wip="${S_WORKLOAD_IDENTITY_PROVIDER}"; if [ -z "$wip" ]; then wip="${V_WORKLOAD_IDENTITY_PROVIDER}"; fi; echo "WORKLOAD_IDENTITY_PROVIDER=$wip" >> $GITHUB_ENV
           pid="${S_GCP_PROJECT_ID}"; if [ -z "$pid" ]; then pid="${V_GCP_PROJECT_ID}"; fi; echo "GCP_PROJECT_ID=$pid" >> $GITHUB_ENV
           sa="${S_GCP_SERVICE_ACCOUNT_EMAIL}"; if [ -z "$sa" ]; then sa="${V_GCP_SERVICE_ACCOUNT_EMAIL}"; fi; echo "GCP_SERVICE_ACCOUNT_EMAIL=$sa" >> $GITHUB_ENV
