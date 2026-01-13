@@ -79,7 +79,7 @@ jobs:
           credentials_json: ${{ env.GCP_SA_KEY }}
 
       - name: Authenticate to Google Cloud via Workload Identity
-        if: ${{ steps.gate.outputs.should_deploy == 'true' && steps.gate.outputs.auth_method == 'wif' }}
+        if: ${{ steps.gate.outputs.should_deploy == 'true' && steps.gate.outputs.auth_method == 'wif' && env.GCP_SERVICE_ACCOUNT_EMAIL != '' }}
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
