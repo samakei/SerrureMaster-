@@ -125,7 +125,7 @@ npm run dev
                 Recharger la page
               </button>
               <a
-                href="https://github.com/samakei/SerrureMaster-#readme"
+                href="https://github.com/samakei/SerrureMaster-"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"

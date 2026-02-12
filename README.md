@@ -79,7 +79,6 @@ Si vous rencontrez cette erreur :
 
 4. Si la page reste blanche, ouvrez la console du navigateur (F12) pour voir les erreurs
 
-## 🧪 Tests 
 ## 🧪 Tests
 
 Pour tester l'application :

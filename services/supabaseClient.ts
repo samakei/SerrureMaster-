@@ -5,11 +5,10 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Flag pour indiquer si la configuration est valide
-export let isSupabaseConfigured = true;
-export let supabaseConfigError: string | null = null;
-
-// Validation des variables requises
-if (!supabaseUrl || !supabaseKey) {
+export const isSupabaseConfigured = !!(supabaseUrl && supabaseKey);
+export const supabaseConfigError = (() => {
+  if (isSupabaseConfigured) return null;
+  
   const missing: string[] = [];
   if (!supabaseUrl) missing.push('VITE_SUPABASE_URL');
   if (!supabaseKey) missing.push('VITE_SUPABASE_ANON_KEY');
@@ -21,12 +20,11 @@ if (!supabaseUrl || !supabaseKey) {
     MODE: import.meta.env.MODE,
   });
 
-  isSupabaseConfigured = false;
   const isProduction = import.meta.env.MODE === 'production';
-  supabaseConfigError = isProduction
+  return isProduction
     ? `⚠️ Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.production.local puis: npm run build && npm run preview`
     : `⚠️ Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.local puis: npm run dev`;
-}
+})();
 
 // Log de démarrage (sans exposer les clés)
 if (isSupabaseConfigured) {
@@ -42,6 +40,8 @@ if (isSupabaseConfigured) {
 }
 
 // Création du client Supabase avec des valeurs par défaut si non configuré
+// Note: Le client avec placeholders ne doit être utilisé que si ConfigurationCheck
+// empêche l'accès au reste de l'application
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder.supabase.co',
   supabaseKey || 'placeholder-key'
