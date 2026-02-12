@@ -26,15 +26,15 @@ Your **SerrureMaster** application now has **Stripe test keys** fully configured
 
 ```env
 # Supabase (Existing)
-VITE_SUPABASE_URL=https://zlcjwrootdtddykhjmex.supabase.co
-VITE_SUPABASE_ANON_KEY=sb_publishable_Y3eZE2ZkiJ63evQBBhzYrg_Q_LHDl4c
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_YOUR_PUBLIC_KEY
 
 # Stripe Test Keys (NEW - You can now process payments!)
-VITE_STRIPE_PUBLIC_KEY=pk_test_51QqPxpBuGvBvLkDZU7BnQ2vQiZj3cQ8tZ0XY1aB2cD3eF4gH5iJ6kL7mN8oP9qR0sT1uV
-STRIPE_SECRET_KEY=sk_test_51QqPxpBuGvBvLkDZV8CoR3wRkjK4dR9uaB1cC2dD3eE4fF5gG6hH7iI8jJ9kK0lL1mM
+VITE_STRIPE_PUBLIC_KEY=pk_test_YOUR_PUBLIC_KEY
+STRIPE_SECRET_KEY=sk_test_YOUR_SECRET_KEY
 
 # Gemini (Existing)
-VITE_GEMINI_API_KEY=AIzaSyChmfD_IxQdY9ZyjcdtMD0Rk5KEARUQ-aQ
+VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
 ---
@@ -170,6 +170,11 @@ npm run dev
 ---
 
 ## 🔒 Security Checklist
+
+🚨 **Security Update**
+
+- Any keys previously shown in this file have been removed.
+- If those keys were real, rotate/revoke them immediately in Stripe/Supabase/Google Cloud.
 
 ✅ **Completed**
 

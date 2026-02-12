@@ -10,9 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+build
 *.env.local
+.env.production.local
 .env
-STRIPE_CONFIGURED.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

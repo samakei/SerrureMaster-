@@ -12,10 +12,10 @@ SerrureMaster utilise **Stripe** pour le traitement des paiements. Ce guide expl
 
 ```env
 # Public Key (Frontend - Safe)
-VITE_STRIPE_PUBLIC_KEY=pk_test_51QqPxpBuGvBvLkDZU7BnQ2vQiZj3cQ8tZ0XY1aB2cD3eF4gH5iJ6kL7mN8oP9qR0sT1uV
+VITE_STRIPE_PUBLIC_KEY=pk_test_YOUR_PUBLIC_KEY
 
 # Secret Key (Backend - Supabase Edge Functions)
-STRIPE_SECRET_KEY=sk_test_51QqPxpBuGvBvLkDZV8CoR3wRkjK4dR9uaB1cC2dD3eE4fF5gG6hH7iI8jJ9kK0lL1mM
+STRIPE_SECRET_KEY=sk_test_YOUR_SECRET_KEY
 ```
 
 ---

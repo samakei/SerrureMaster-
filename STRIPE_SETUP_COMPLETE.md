@@ -15,8 +15,8 @@ Your SerrureMaster application is now configured with **Stripe test keys** for p
 Contains test keys for local development:
 
 ```env
-VITE_STRIPE_PUBLIC_KEY=pk_test_51QqPxpBuGvBvLkDZU7BnQ2vQiZj3cQ8...
-STRIPE_SECRET_KEY=sk_test_51QqPxpBuGvBvLkDZV8CoR3wRkjK4dR9uaB...
+VITE_STRIPE_PUBLIC_KEY=pk_test_YOUR_PUBLIC_KEY
+STRIPE_SECRET_KEY=sk_test_YOUR_SECRET_KEY
 ```
 
 #### 2. `.env.example` ✅
@@ -38,7 +38,7 @@ Script to verify configuration is correct
 ### Public Key (Safe for Frontend)
 
 ```
-pk_test_51QqPxpBuGvBvLkDZU7BnQ2vQiZj3cQ8tZ0XY1aB2cD3eF4gH5iJ6kL7mN8oP9qR0sT1uV
+pk_test_YOUR_PUBLIC_KEY
 ```
 
 - **Location**: `.env.local` as `VITE_STRIPE_PUBLIC_KEY`
@@ -48,7 +48,7 @@ pk_test_51QqPxpBuGvBvLkDZU7BnQ2vQiZj3cQ8tZ0XY1aB2cD3eF4gH5iJ6kL7mN8oP9qR0sT1uV
 ### Secret Key (Backend Only)
 
 ```
-sk_test_51QqPxpBuGvBvLkDZV8CoR3wRkjK4dR9uaB1cC2dD3eE4fF5gG6hH7iI8jJ9kK0lL1mM
+sk_test_YOUR_SECRET_KEY
 ```
 
 - **Location**: `.env.local` as `STRIPE_SECRET_KEY`
