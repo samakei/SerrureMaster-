@@ -4,6 +4,10 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Flag pour indiquer si la configuration est valide
+export let isSupabaseConfigured = true;
+export let supabaseConfigError: string | null = null;
+
 // Validation des variables requises
 if (!supabaseUrl || !supabaseKey) {
   const missing: string[] = [];
@@ -17,24 +21,28 @@ if (!supabaseUrl || !supabaseKey) {
     MODE: import.meta.env.MODE,
   });
 
+  isSupabaseConfigured = false;
   const isProduction = import.meta.env.MODE === 'production';
-  const msg = isProduction
+  supabaseConfigError = isProduction
     ? `⚠️ Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.production.local puis: npm run build && npm run preview`
     : `⚠️ Configuration Supabase manquante: ${missing.join(', ')}. Ajoutez-les dans .env.local puis: npm run dev`;
-
-  throw new Error(msg);
 }
 
 // Log de démarrage (sans exposer les clés)
-console.info('✅ Supabase client initialisé:', {
-  url: new URL(supabaseUrl).host,
-  keyFormat: supabaseKey.startsWith('sb_publishable_')
-    ? 'publishable'
-    : supabaseKey.startsWith('eyJ')
-      ? 'JWT'
-      : 'unknown',
-  mode: import.meta.env.MODE,
-});
+if (isSupabaseConfigured) {
+  console.info('✅ Supabase client initialisé:', {
+    url: new URL(supabaseUrl!).host,
+    keyFormat: supabaseKey!.startsWith('sb_publishable_')
+      ? 'publishable'
+      : supabaseKey!.startsWith('eyJ')
+        ? 'JWT'
+        : 'unknown',
+    mode: import.meta.env.MODE,
+  });
+}
 
-// Création du client Supabase
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Création du client Supabase avec des valeurs par défaut si non configuré
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseKey || 'placeholder-key'
+);
