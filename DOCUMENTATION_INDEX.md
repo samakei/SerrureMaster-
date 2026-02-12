@@ -127,6 +127,11 @@ Start here for project status and planning.
    - Fixes applied
    - Recommendations
 
+5. **[AUDIT_DATA_COMPLIANCE_SUMMARY.md](AUDIT_DATA_COMPLIANCE_SUMMARY.md)** - Data compliance summary
+   - RGPD/GDPR status
+   - Critical issues
+   - Action plan
+
 ---
 
 ### 🎓 **New Team Members**
@@ -177,6 +182,9 @@ Start here to get up to speed.
 ### 📋 **Audit & Quality**
 
 - [AUDIT_RESULTS.md](AUDIT_RESULTS.md) - Complete audit report
+- [AUDIT_SUMMARY.md](AUDIT_SUMMARY.md) - Deployment audit summary
+- [AUDIT_DATA_COMPLIANCE.md](AUDIT_DATA_COMPLIANCE.md) - Data compliance audit (RGPD/GDPR)
+- [AUDIT_DATA_COMPLIANCE_SUMMARY.md](AUDIT_DATA_COMPLIANCE_SUMMARY.md) - Compliance quick reference
 - [LINTING_NOTES.md](LINTING_NOTES.md) - Linting explanations
 - [FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) - Verification checklist
 
@@ -253,6 +261,8 @@ Start here to get up to speed.
 | **EXECUTIVE_SUMMARY.md**      | Complete project overview          | 300 lines | Managers, Stakeholders |
 | **TESTING_IMPLEMENTATION.md** | Testing setup summary              | 250 lines | QA, Developers         |
 | **FINAL_VERIFICATION.md**     | Implementation verification        | 350 lines | QA, Release managers   |
+| **AUDIT_DATA_COMPLIANCE.md**  | Data compliance audit (RGPD/GDPR)  | 800 lines | Legal, DPO, Managers   |
+| **AUDIT_DATA_COMPLIANCE_SUMMARY.md** | Compliance quick reference   | 250 lines | Managers, Team leads   |
 
 ---
 
@@ -462,7 +472,7 @@ You now have access to comprehensive documentation covering:
 
 ---
 
-**Last Updated**: 26 Décembre 2025
-**Total Documents**: 15
-**Total Lines of Documentation**: 3,500+
+**Last Updated**: 12 Février 2026
+**Total Documents**: 17
+**Total Lines of Documentation**: 4,500+
 **Status**: ✅ Complete & Current
