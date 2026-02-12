@@ -6,32 +6,32 @@
 -- p1_door_slammed - Urgence : Porte Claquée
 UPDATE products 
 SET image = '/images/p1.jpg'
-WHERE id = 'p1_door_slammed';
+WHERE id = 'Urgence : Porte Claquée';
 
 -- p2_key_broken - Clé Cassée dans le Barillet
 UPDATE products 
 SET image = '/images/p2.jpg' 
-WHERE id = 'p2_key_broken';
+WHERE id = 'Clé Cassée dans le Barillet';
 
 -- p3_cylinder_replace - Remplacer son Cylindre
 UPDATE products 
 SET image = '/images/p3.jpg' 
-WHERE id = 'p3_cylinder_replace';
+WHERE id = 'Remplacer son Cylindre';
 
 -- p4_security_pack - Changer sa Serrure en 15 min
 UPDATE products 
 SET image = '/images/p4.jpg' 
-WHERE id = 'p4_security_pack';
+WHERE id = 'Changer sa Serrure en 15 min';
 
 -- p5_audit_security - Audit Sécurité & Renforcement
 UPDATE products 
 SET image = '/images/p5.jpg' 
-WHERE id = 'p5_audit_security';
+WHERE id = 'Audit Securite et Renforcement';
 
 -- p6_survival_kit - Pack : Le Kit de Survie
 UPDATE products 
 SET image = '/images/p6.jpg' 
-WHERE id = 'p6_survival_kit';
+WHERE id = 'Pack : Le Kit de Survie';
 
 -- Vérification des images
 SELECT id, title, image FROM products ORDER BY id;
