@@ -7,11 +7,17 @@
 -- ⚠️ IMPORTANT: Exécutez ce script EN PREMIER avant update-real-stripe-prices.sql
 
 -- Étape 1: Renommer temporairement pour éviter les conflits
-UPDATE products SET id = 'temp_p4' WHERE id = 'p6_security_pack';
-UPDATE products SET id = 'temp_p5' WHERE id = 'p7_audit_security';
-UPDATE products SET id = 'temp_p6' WHERE id = 'p5_survival_kit';
+UPDATE products SET id = 'temp_p1' WHERE id = 'p1_door_slammed';
+UPDATE products SET id = 'temp_p2' WHERE id = 'p2_key_broken';
+UPDATE products SET id = 'temp_p3' WHERE id = 'p3_cylinder_replace';
+UPDATE products SET id = 'temp_p4' WHERE id = 'p4_security_pack';
+UPDATE products SET id = 'temp_p5' WHERE id = 'p5_audit_security';
+UPDATE products SET id = 'temp_p6' WHERE id = 'p6_survival_kit';
 
 -- Étape 2: Appliquer les nouveaux IDs définitifs
+UPDATE products SET id = 'p1_door_slammed' WHERE id = 'temp_p1';
+UPDATE products SET id = 'p2_key_broken' WHERE id = 'temp_p2';
+UPDATE products SET id = 'p3_cylinder_replace' WHERE id = 'temp_p3';
 UPDATE products SET id = 'p4_security_pack' WHERE id = 'temp_p4';
 UPDATE products SET id = 'p5_audit_security' WHERE id = 'temp_p5';
 UPDATE products SET id = 'p6_survival_kit' WHERE id = 'temp_p6';
