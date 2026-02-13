@@ -63,8 +63,8 @@
     <meta property="twitter:image" content="https://serruremaster.com/og-image.jpg" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="/images/p1.jpg" />
-    <link rel="apple-touch-icon" href="/images/p1.jpg" />
+    <link rel="icon" type="image/png" href="/images/logo_serruremaster.png" />
+    <link rel="apple-touch-icon" href="/images/logo_serruremaster.png" />
 
     <!-- Fonts - Optimized loading -->
     <link
@@ -134,9 +134,14 @@
     <!-- Critical CSS pour éviter FOUC et améliorer LCP -->
     <style>
       /* Base styles critiques */
-      * {
+      html,
+      body,
+      #root {
         margin: 0;
         padding: 0;
+      }
+
+      html {
         box-sizing: border-box;
       }
 
