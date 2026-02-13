@@ -1,6 +1,8 @@
 name: Deploy to Cloud Run (Staging PR)
 
 on:
+  push:
+    branches: ['main']
   pull_request:
     branches: ['main']
 
@@ -56,10 +58,18 @@ jobs:
       - name: Gate staging deploy
         id: gate
         env:
+          EVENT_NAME: ${{ github.event_name }}
           PR_SAME_REPO: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
           should="false"
-          if [ "${PR_SAME_REPO}" = "true" ] && { [ -n "${GCP_SA_KEY}" ] || [ -n "${WORKLOAD_IDENTITY_PROVIDER}" ]; }; then
+          has_auth="false"
+          if [ -n "${GCP_SA_KEY}" ] || [ -n "${WORKLOAD_IDENTITY_PROVIDER}" ]; then
+            has_auth="true"
+          fi
+
+          if [ "${EVENT_NAME}" = "push" ] && [ "${has_auth}" = "true" ]; then
+            should="true"
+          elif [ "${PR_SAME_REPO}" = "true" ] && [ "${has_auth}" = "true" ]; then
             should="true"
           fi
           echo "should_deploy=$should" >> $GITHUB_OUTPUT
