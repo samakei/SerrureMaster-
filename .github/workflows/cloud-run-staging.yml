@@ -45,14 +45,32 @@ jobs:
           S_GCP_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GCP_SERVICE_ACCOUNT_EMAIL }}
           V_GCP_SERVICE_ACCOUNT_EMAIL: ${{ vars.GCP_SERVICE_ACCOUNT_EMAIL }}
         run: |
+          write_env_var() {
+            key="$1"
+            value="$2"
+            if [ -n "$value" ]; then
+              {
+                echo "$key<<EOF"
+                echo "$value"
+                echo "EOF"
+              } >> "$GITHUB_ENV"
+            fi
+          }
+
           # Préférer Secrets, sinon Variables
-          [ -n "${S_GCP_SA_KEY}" ] && echo "GCP_SA_KEY=${S_GCP_SA_KEY}" >> $GITHUB_ENV || echo "GCP_SA_KEY=${V_GCP_SA_KEY}" >> $GITHUB_ENV
-          [ -n "${S_WORKLOAD_IDENTITY_PROVIDER}" ] && echo "WORKLOAD_IDENTITY_PROVIDER=${S_WORKLOAD_IDENTITY_PROVIDER}" >> $GITHUB_ENV || echo "WORKLOAD_IDENTITY_PROVIDER=${V_WORKLOAD_IDENTITY_PROVIDER}" >> $GITHUB_ENV
+          GCP_SA_KEY_VAL="${S_GCP_SA_KEY}"
+          [ -z "${GCP_SA_KEY_VAL}" ] && GCP_SA_KEY_VAL="${V_GCP_SA_KEY}"
+          write_env_var "GCP_SA_KEY" "${GCP_SA_KEY_VAL}"
+
+          WIF_VAL="${S_WORKLOAD_IDENTITY_PROVIDER}"
+          [ -z "${WIF_VAL}" ] && WIF_VAL="${V_WORKLOAD_IDENTITY_PROVIDER}"
+          write_env_var "WORKLOAD_IDENTITY_PROVIDER" "${WIF_VAL}"
+
           # project_id et service account peuvent être en Secrets ou Variables
           PID="${S_GCP_PROJECT_ID}"; [ -z "$PID" ] && PID="${V_GCP_PROJECT_ID}"
           SA_EMAIL="${S_GCP_SERVICE_ACCOUNT_EMAIL}"; [ -z "$SA_EMAIL" ] && SA_EMAIL="${V_GCP_SERVICE_ACCOUNT_EMAIL}"
-          echo "GCP_PROJECT_ID=${PID}" >> $GITHUB_ENV
-          echo "GCP_SERVICE_ACCOUNT_EMAIL=${SA_EMAIL}" >> $GITHUB_ENV
+          write_env_var "GCP_PROJECT_ID" "${PID}"
+          write_env_var "GCP_SERVICE_ACCOUNT_EMAIL" "${SA_EMAIL}"
           echo "project_id=${PID}" >> $GITHUB_OUTPUT
 
       - name: Gate staging deploy
