@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { ConfigurationCheck } from './components/ConfigurationCheck';
 
 // Suppress extension connection errors
 if (typeof window !== 'undefined' && typeof (window as any).chrome !== 'undefined') {
@@ -30,6 +32,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <ConfigurationCheck>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </ConfigurationCheck>
   </React.StrictMode>
 );
