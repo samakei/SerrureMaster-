@@ -43,6 +43,8 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product, is
           src={productImage}
           alt={product.title || 'Produit'}
           decoding="async"
+          width={800}
+          height={500}
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/images/p1.jpg';
           }}
