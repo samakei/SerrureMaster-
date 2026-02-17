@@ -248,6 +248,27 @@ const SerrureMasterApp = () => {
       window.history.replaceState({}, '', '/');
     }
 
+    // 5. Check URL hash params for Supabase auth errors (#error=...)
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const authErrorCode = hashParams.get('error_code');
+    const authError = hashParams.get('error');
+
+    if (authError || authErrorCode) {
+      if (authErrorCode === 'otp_expired') {
+        showNotification('⚠️ Le lien de connexion a expiré. Demandez un nouveau lien email.');
+      } else {
+        const authErrorDescription = hashParams
+          .get('error_description')
+          ?.replace(/\+/g, ' ')
+          ?.trim();
+        showNotification(
+          `⚠️ Connexion impossible${authErrorDescription ? ` : ${authErrorDescription}` : '.'}`
+        );
+      }
+
+      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    }
+
     return () => subscription.unsubscribe();
   }, [clearCart, toggleCart]);
 
