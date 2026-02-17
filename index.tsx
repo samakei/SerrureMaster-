@@ -1,7 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './index.css';
+
+const loadGlobalStyles = () => {
+  void import('./index.css');
+};
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', loadGlobalStyles, { once: true });
+} else {
+  loadGlobalStyles();
+}
 
 // Suppress extension connection errors
 if (typeof window !== 'undefined' && typeof (window as any).chrome !== 'undefined') {
