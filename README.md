@@ -27,10 +27,16 @@ Pour tester un paiement complet :
 
 Tout est opérationnel ! 💪
 
-Pour tester un paiement complet :
+## 🔐 Sécurité & Conformité
 
-* Carte test : `4242 4242 4242 4242`
-* Date : N'importe quelle date future
-* CVC : 123
+**⚠️ IMPORTANT**: Avant tout déploiement en production, consulter:
 
-Tout est opérationnel ! 💪
+* **[AUDIT_DATA_COMPLIANCE_README.md](AUDIT_DATA_COMPLIANCE_README.md)** - Vue d'ensemble de l'audit
+* **[SECURITY_AND_COMPLIANCE.md](SECURITY_AND_COMPLIANCE.md)** - Guide de sécurité
+* **[AUDIT_DATA_COMPLIANCE.md](AUDIT_DATA_COMPLIANCE.md)** - Audit RGPD complet
+
+**Statut**: ⚠️ 4 problèmes critiques à corriger avant production
+
+## 📚 Documentation Complète
+
+Voir **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** pour accéder à toute la documentation du projet.
