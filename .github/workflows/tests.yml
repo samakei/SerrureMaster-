@@ -147,7 +147,7 @@ jobs:
           VITE_STRIPE_PUBLIC_KEY: ${{ env.VITE_STRIPE_PUBLIC_KEY }}
           VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: build
           path: build
