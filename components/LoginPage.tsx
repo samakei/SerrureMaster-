@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Mail, ArrowRight, ShieldCheck, Loader2, AlertCircle, Unlock } from 'lucide-react';
 import { LOGO_URL, APP_NAME } from '../constants';
 import { supabase } from '../services/supabaseClient';
@@ -12,9 +12,29 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'success'>('idle');
   const [error, setError] = useState<string | null>(null);
+  const [cooldownUntil, setCooldownUntil] = useState<number>(0);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    if (!cooldownUntil || cooldownUntil <= now) return;
+
+    const timer = window.setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [cooldownUntil, now]);
+
+  const cooldownRemaining = Math.max(0, Math.ceil((cooldownUntil - now) / 1000));
+  const isCooldown = cooldownRemaining > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isCooldown) {
+      setError(`⏳ Trop de tentatives. Réessayez dans ${cooldownRemaining}s.`);
+      return;
+    }
+
     if (!email || !email.includes('@')) {
       setError('Veuillez entrer une adresse email valide.');
       return;
@@ -37,6 +57,20 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
       setStatus('sent');
     } catch (err: any) {
       console.error('Erreur Login:', err);
+
+      const errMessage = String(err?.message || '').toLowerCase();
+      const isRateLimited =
+        err?.status === 429 ||
+        errMessage.includes('rate limit') ||
+        errMessage.includes('email rate limit exceeded');
+
+      if (isRateLimited) {
+        const retryAfterSeconds = Number(err?.__isAuthError ? err?.retry_after : undefined) || 60;
+        setCooldownUntil(Date.now() + retryAfterSeconds * 1000);
+        setError(`⏳ Limite atteinte. Réessayez dans ${retryAfterSeconds}s.`);
+        setStatus('idle');
+        return;
+      }
 
       // Explicitly check for fetch failure (Backend not reachable / Keys missing)
       if (
@@ -124,13 +158,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
               <div>
                 <button
                   type="submit"
-                  disabled={status === 'loading'}
+                  disabled={status === 'loading' || isCooldown}
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-orange-600 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-orange-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {status === 'loading' ? (
                     <>
                       <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5" />
                       Connexion...
+                    </>
+                  ) : isCooldown ? (
+                    <>
+                      Réessayez dans {cooldownRemaining}s
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </>
                   ) : (
                     <>
