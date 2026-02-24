@@ -378,33 +378,35 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigateToCourse }
 
   return (
     <div className="min-h-screen bg-slate-50 pb-12 relative overflow-hidden">
-      <div className="bg-slate-900 pb-32 pt-10">
+      <div className="bg-slate-900 pb-24 sm:pb-32 pt-6 sm:pt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <div className="bg-slate-800 p-2 rounded-xl border border-slate-700 shadow-lg">
                 <img
                   src={LOGO_URL}
                   alt={APP_NAME}
-                  className="w-10 h-10 object-contain"
+                  className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">Espace Membre</h1>
-                <p className="text-slate-400">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                  Espace Membre
+                </h1>
+                <p className="text-slate-400 text-xs sm:text-sm">
                   Bienvenue, {user.name}. Voici vos guides et outils d'intervention.
                 </p>
               </div>
             </div>
 
-            {/* Bouton Avis */}
+            {/* Bouton Avis Desktop */}
             {ownedProducts.length > 0 && (
               <button
                 onClick={() => setShowTestimonialModal(true)}
-                className="hidden md:flex items-center bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 transition"
+                className="hidden sm:flex items-center bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium border border-slate-700 transition"
               >
                 <Star className="w-4 h-4 text-orange-500 mr-2" />
                 Donner mon avis
@@ -414,7 +416,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigateToCourse }
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 relative z-10 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 sm:-mt-24 relative z-10 space-y-6 sm:space-y-8">
         {showDoorHelper && (
           <div className="animate-[slideUp_0.5s_ease-out]">
             <DoorDirectionHelper />
@@ -426,28 +428,30 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigateToCourse }
             ownedProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200"
+                className="bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden border border-slate-200"
               >
-                <div className="bg-slate-900 p-6 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-800">
-                  <div className="flex items-center space-x-4 mb-4 md:mb-0">
+                <div className="bg-slate-900 p-4 sm:p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center border-b border-slate-800 gap-4">
+                  <div className="flex items-center space-x-3 sm:space-x-4 w-full lg:w-auto">
                     <img
                       src={product.image}
                       alt={product.title}
-                      className="w-16 h-16 rounded-lg object-cover border border-slate-700"
+                      className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover border border-slate-700 flex-shrink-0"
                     />
-                    <div>
-                      <h2 className="text-xl font-bold text-white flex items-center">
-                        {product.title}
-                        <span className="ml-3 bg-green-500/20 text-green-400 text-xs px-2 py-0.5 rounded border border-green-500/30 flex items-center">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-base sm:text-xl font-bold text-white flex flex-col sm:flex-row sm:items-center gap-2">
+                        <span className="truncate">{product.title}</span>
+                        <span className="bg-green-500/20 text-green-400 text-xs px-2 py-0.5 rounded border border-green-500/30 flex items-center w-fit">
                           <CheckCircle className="w-3 h-3 mr-1" />
                           Acquis
                         </span>
                       </h2>
-                      <p className="text-slate-400 text-sm">{product.description}</p>
+                      <p className="text-slate-400 text-xs sm:text-sm line-clamp-2">
+                        {product.description}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
                     <SecureFileDownload
                       label="Plan PDF"
                       product={product}
@@ -467,12 +471,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigateToCourse }
                   </div>
                 </div>
 
-                <div className="p-6 bg-slate-50">
-                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center">
+                <div className="p-4 sm:p-6 bg-slate-50">
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 sm:mb-4 flex items-center">
                     <Download className="w-4 h-4 mr-2" />
                     Fichiers disponibles
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <SecureFileDownload label="Guide Complet (PDF)" product={product} user={user} />
 
                     {(product.type === 'VIDEO' || product.type === 'BUNDLE') && (
@@ -495,12 +499,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigateToCourse }
                 </div>
 
                 {/* Navigation vers le CoursePlayer si applicable */}
-                <div className="bg-slate-100 p-4 border-t border-slate-200 flex justify-end">
+                <div className="bg-slate-100 p-3 sm:p-4 border-t border-slate-200 flex justify-center sm:justify-end">
                   <button
                     onClick={() => onNavigateToCourse && onNavigateToCourse(product.id)}
-                    className="flex items-center text-indigo-600 hover:text-indigo-800 font-bold text-sm"
+                    className="flex items-center text-indigo-600 hover:text-indigo-800 font-bold text-xs sm:text-sm"
                   >
-                    Accéder à l'espace e-learning
+                    <span className="hidden sm:inline">Accéder à l'espace e-learning</span>
+                    <span className="sm:hidden">E-learning</span>
                     <ChevronRight className="w-4 h-4 ml-1" />
                   </button>
                 </div>
@@ -524,7 +529,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigateToCourse }
         {ownedProducts.length > 0 && (
           <button
             onClick={() => setShowTestimonialModal(true)}
-            className="md:hidden w-full bg-slate-800 text-white p-4 rounded-xl flex items-center justify-center font-bold"
+            className="sm:hidden w-full bg-slate-800 text-white p-4 rounded-xl flex items-center justify-center font-bold text-sm"
           >
             <Star className="w-4 h-4 text-orange-500 mr-2" />
             Donner mon avis sur les guides

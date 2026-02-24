@@ -762,6 +762,7 @@ export const AdminDashboard: React.FC<{
     'overview'
   );
   const [stats, setStats] = useState<any>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { products } = useProducts();
   const { testimonials, toggleApproval, deleteTestimonial } = useTestimonials();
 
@@ -778,8 +779,20 @@ export const AdminDashboard: React.FC<{
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-orange-500/30">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 bottom-0 w-64 bg-slate-900 border-r border-slate-800 flex flex-col z-20">
+      <aside
+        className={`fixed left-0 top-0 bottom-0 w-64 bg-slate-900 border-r border-slate-800 flex flex-col z-50 transition-transform duration-300 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
         <div className="h-20 flex items-center px-6 border-b border-slate-800">
           <img src={LOGO_URL} className="w-8 h-8 mr-3" alt="Logo" />
           <span className="font-bold text-white tracking-wider">
@@ -851,15 +864,40 @@ export const AdminDashboard: React.FC<{
         </div>
       </aside>
 
+      {/* Mobile Header */}
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 z-30">
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 text-slate-400 hover:text-white transition"
+          aria-label="Menu de navigation mobile"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+        <div className="flex items-center">
+          <img src={LOGO_URL} className="w-6 h-6 mr-2" alt="Logo" />
+          <span className="font-bold text-white text-sm">
+            MASTER<span className="text-orange-500">ADMIN</span>
+          </span>
+        </div>
+        <div className="w-10" />
+      </header>
+
       {/* Main Content */}
-      <main className="ml-64 p-8">
+      <main className="lg:ml-64 p-4 sm:p-6 lg:p-8 pt-20 lg:pt-8">
         {/* Tab: Overview */}
         {activeTab === 'overview' && (
           <div className="space-y-8 animate-fade-in">
             <h1 className="text-2xl font-bold text-white">Tableau de bord</h1>
 
             {/* KPI Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
                   <DollarSign className="w-16 h-16 text-emerald-500" />
@@ -908,11 +946,11 @@ export const AdminDashboard: React.FC<{
 
             {/* Logs */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-              <div className="p-6 border-b border-slate-800">
-                <h3 className="text-lg font-bold text-white">Logs Système Récents</h3>
+              <div className="p-4 sm:p-6 border-b border-slate-800">
+                <h3 className="text-base sm:text-lg font-bold text-white">Logs Système Récents</h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-400">
+              <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900">
+                <table className="w-full text-left text-xs sm:text-sm text-slate-400 min-w-[600px]">
                   <thead className="bg-slate-950/50 text-slate-400 uppercase font-bold text-xs">
                     <tr>
                       <th className="p-4">Horodatage</th>
@@ -956,9 +994,9 @@ export const AdminDashboard: React.FC<{
         {/* Tab: Products */}
         {activeTab === 'products' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-white">Gestion du Catalogue</h1>
-              <button className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-bold text-sm flex items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h1 className="text-xl sm:text-2xl font-bold text-white">Gestion du Catalogue</h1>
+              <button className="w-full sm:w-auto px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg font-bold text-sm flex items-center justify-center">
                 <Upload className="w-4 h-4 mr-2" /> Nouveau Produit
               </button>
             </div>
@@ -973,9 +1011,9 @@ export const AdminDashboard: React.FC<{
 
         {/* Tab: Settings / Testimonials */}
         {activeTab === 'settings' && (
-          <div className="space-y-8 animate-fade-in">
-            <h1 className="text-2xl font-bold text-white flex items-center">
-              <MessageSquare className="w-6 h-6 mr-3 text-indigo-500" />
+          <div className="space-y-6 sm:space-y-8 animate-fade-in">
+            <h1 className="text-xl sm:text-2xl font-bold text-white flex items-center">
+              <MessageSquare className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 text-indigo-500" />
               Modération & Configuration
             </h1>
 
@@ -997,11 +1035,11 @@ export const AdminDashboard: React.FC<{
                 {testimonials.map((t) => (
                   <div
                     key={t.id}
-                    className={`p-6 flex items-start justify-between transition ${
+                    className={`p-4 sm:p-6 flex flex-col sm:flex-row items-start justify-between gap-4 transition ${
                       t.approved ? 'bg-slate-900' : 'bg-orange-950/10 hover:bg-orange-900/10'
                     }`}
                   >
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span
                           className={`font-bold ${t.approved ? 'text-white' : 'text-orange-200'}`}
@@ -1036,10 +1074,10 @@ export const AdminDashboard: React.FC<{
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => toggleApproval(t.id)}
-                        className={`px-3 py-1.5 rounded-lg border flex items-center gap-2 transition text-xs font-bold ${
+                        className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg border flex items-center justify-center gap-2 transition text-xs font-bold ${
                           t.approved
                             ? 'bg-green-500/10 border-green-500/30 text-green-500 hover:bg-green-500/20'
                             : 'bg-orange-500 text-white border-orange-600 hover:bg-orange-400 shadow-lg shadow-orange-900/20'
