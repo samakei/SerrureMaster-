@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Mail, ArrowRight, ShieldCheck, Loader2, AlertCircle, Unlock } from 'lucide-react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { LOGO_URL, APP_NAME } from '../constants';
 import { supabase } from '../services/supabaseClient';
 
@@ -14,6 +15,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
   const [error, setError] = useState<string | null>(null);
   const [cooldownUntil, setCooldownUntil] = useState<number>(0);
   const [now, setNow] = useState(Date.now());
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
+
+  const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY;
 
   useEffect(() => {
     if (!cooldownUntil || cooldownUntil <= now) return;
@@ -40,23 +45,41 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
       return;
     }
 
+    // Vérification hCaptcha si activé
+    if (HCAPTCHA_SITE_KEY && !captchaToken) {
+      setError('⚠️ Veuillez valider le captcha de sécurité.');
+      return;
+    }
+
     setError(null);
     setStatus('loading');
 
     try {
-      // Authentification réelle via Supabase Magic Link
+      // Authentification réelle via Supabase Magic Link avec hCaptcha
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
           emailRedirectTo: window.location.origin,
+          captchaToken: captchaToken || undefined,
         },
       });
 
       if (error) throw error;
 
       setStatus('sent');
+      // Reset captcha après succès
+      if (captchaRef.current) {
+        captchaRef.current.resetCaptcha();
+        setCaptchaToken(null);
+      }
     } catch (err: any) {
       console.error('Erreur Login:', err);
+
+      // Reset captcha en cas d'erreur
+      if (captchaRef.current) {
+        captchaRef.current.resetCaptcha();
+        setCaptchaToken(null);
+      }
 
       const errMessage = String(err?.message || '').toLowerCase();
       const isRateLimited =
@@ -155,10 +178,29 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
                 )}
               </div>
 
+              {/* hCaptcha Protection */}
+              {HCAPTCHA_SITE_KEY && (
+                <div className="flex justify-center">
+                  <HCaptcha
+                    ref={captchaRef}
+                    sitekey={HCAPTCHA_SITE_KEY}
+                    onVerify={(token) => setCaptchaToken(token)}
+                    onExpire={() => setCaptchaToken(null)}
+                    onError={() => {
+                      setCaptchaToken(null);
+                      setError('⚠️ Erreur captcha. Rechargez la page.');
+                    }}
+                    theme="dark"
+                  />
+                </div>
+              )}
+
               <div>
                 <button
                   type="submit"
-                  disabled={status === 'loading' || isCooldown}
+                  disabled={
+                    status === 'loading' || isCooldown || (HCAPTCHA_SITE_KEY && !captchaToken)
+                  }
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-orange-600 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-orange-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {status === 'loading' ? (
