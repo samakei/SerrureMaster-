@@ -1,0 +1,31 @@
+CONNEXION À SERRUREMASTER
+
+Bonjour,
+
+Merci de vouloir accéder à votre espace SerrureMaster. Pour continuer, veuillez confirmer votre accès en cliquant sur le lien ci-dessous :
+
+{{ .ConfirmationURL }}
+
+Ou entrez ce code de vérification :
+{{ .Token }}
+
+---
+
+🛡️ LIEN SÉCURISÉ
+Ce lien est personnel et expirera dans 24 heures. Ne le partagez avec personne. 
+Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet e-mail en toute sécurité.
+
+---
+
+SERRUREMASTER SARL
+📍 123 Rue de l'Innovation, 75001 Paris, France
+📧 support@serruremaster.com
+🌐 serruremaster.com
+
+---
+
+Support: https://serruremaster.com/support
+Confidentialité: https://serruremaster.com/privacy
+Conditions: https://serruremaster.com/legal
+
+© 2024 SerrureMaster. Tous droits réservés.
