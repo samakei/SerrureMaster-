@@ -88,6 +88,8 @@ jobs:
           V_VITE_STRIPE_PUBLIC_KEY: ${{ vars.VITE_STRIPE_PUBLIC_KEY }}
           S_VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
           V_VITE_GEMINI_API_KEY: ${{ vars.VITE_GEMINI_API_KEY }}
+          S_VITE_HCAPTCHA_SITE_KEY: ${{ secrets.VITE_HCAPTCHA_SITE_KEY }}
+          V_VITE_HCAPTCHA_SITE_KEY: ${{ vars.VITE_HCAPTCHA_SITE_KEY }}
         run: |
           export_vite() {
             name="$1"; sec="$2"; var="$3";
@@ -98,6 +100,7 @@ jobs:
           export_vite VITE_SUPABASE_ANON_KEY "$S_VITE_SUPABASE_ANON_KEY" "$V_VITE_SUPABASE_ANON_KEY"
           export_vite VITE_STRIPE_PUBLIC_KEY "$S_VITE_STRIPE_PUBLIC_KEY" "$V_VITE_STRIPE_PUBLIC_KEY"
           export_vite VITE_GEMINI_API_KEY "$S_VITE_GEMINI_API_KEY" "$V_VITE_GEMINI_API_KEY"
+          export_vite VITE_HCAPTCHA_SITE_KEY "$S_VITE_HCAPTCHA_SITE_KEY" "$V_VITE_HCAPTCHA_SITE_KEY"
       - name: Run tests
         run: npm run test -- --run --coverage
         env:
@@ -105,6 +108,7 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
           VITE_STRIPE_PUBLIC_KEY: ${{ env.VITE_STRIPE_PUBLIC_KEY }}
           VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
+          VITE_HCAPTCHA_SITE_KEY: ${{ env.VITE_HCAPTCHA_SITE_KEY }}
 
   # Job 3: Build
   build:
@@ -129,6 +133,8 @@ jobs:
           V_VITE_STRIPE_PUBLIC_KEY: ${{ vars.VITE_STRIPE_PUBLIC_KEY }}
           S_VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
           V_VITE_GEMINI_API_KEY: ${{ vars.VITE_GEMINI_API_KEY }}
+          S_VITE_HCAPTCHA_SITE_KEY: ${{ secrets.VITE_HCAPTCHA_SITE_KEY }}
+          V_VITE_HCAPTCHA_SITE_KEY: ${{ vars.VITE_HCAPTCHA_SITE_KEY }}
         run: |
           export_vite() {
             name="$1"; sec="$2"; var="$3";
@@ -139,6 +145,7 @@ jobs:
           export_vite VITE_SUPABASE_ANON_KEY "$S_VITE_SUPABASE_ANON_KEY" "$V_VITE_SUPABASE_ANON_KEY"
           export_vite VITE_STRIPE_PUBLIC_KEY "$S_VITE_STRIPE_PUBLIC_KEY" "$V_VITE_STRIPE_PUBLIC_KEY"
           export_vite VITE_GEMINI_API_KEY "$S_VITE_GEMINI_API_KEY" "$V_VITE_GEMINI_API_KEY"
+          export_vite VITE_HCAPTCHA_SITE_KEY "$S_VITE_HCAPTCHA_SITE_KEY" "$V_VITE_HCAPTCHA_SITE_KEY"
       - name: Build
         run: npm run build
         env:
@@ -146,6 +153,7 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
           VITE_STRIPE_PUBLIC_KEY: ${{ env.VITE_STRIPE_PUBLIC_KEY }}
           VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
+          VITE_HCAPTCHA_SITE_KEY: ${{ env.VITE_HCAPTCHA_SITE_KEY }}
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
