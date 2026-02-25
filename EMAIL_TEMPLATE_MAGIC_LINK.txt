@@ -1,31 +1,51 @@
-CONNEXION À SERRUREMASTER
+CONNEXION À VOTRE ESPACE SERRUREMASTER
 
 Bonjour,
 
-Merci de vouloir accéder à votre espace SerrureMaster. Pour continuer, veuillez confirmer votre accès en cliquant sur le lien ci-dessous :
+Vous avez demandé à accéder à votre espace membre SerrureMaster. Nous sommes ravis de vous accompagner dans la gestion sécurisée de vos accès et serrures connectées.
 
+Pour des raisons de sécurité, nous utilisons un système de connexion sans mot de passe. Cliquez simplement sur le lien ci-dessous pour vous connecter en toute sécurité à votre compte :
+
+🔗 LIEN DE CONNEXION SÉCURISÉ
 {{ .ConfirmationURL }}
 
-Ou entrez ce code de vérification :
-{{ .Token }}
+⏰ Ce lien est valide pendant les 24 prochaines heures
 
 ---
 
-🛡️ LIEN SÉCURISÉ
-Ce lien est personnel et expirera dans 24 heures. Ne le partagez avec personne. 
-Si vous n'avez pas demandé cette connexion, vous pouvez ignorer cet e-mail en toute sécurité.
+✨ VOTRE ESPACE MEMBRE VOUS DONNE ACCÈS À :
+• Vos guides de formation exclusifs
+• Le tableau de bord de gestion de vos installations
+• Le support technique prioritaire
+• Les mises à jour de nos produits et services
 
 ---
 
-SERRUREMASTER SARL
-📍 123 Rue de l'Innovation, 75001 Paris, France
-📧 support@serruremaster.com
-🌐 serruremaster.com
+🛡️ SÉCURITÉ RENFORCÉE
+Ce lien de connexion est unique et personnel. Il expirera automatiquement dans 24 heures. Si vous n'avez pas demandé cet accès, vous pouvez ignorer cet email en toute sécurité. Aucune action supplémentaire n'est requise.
 
 ---
 
-Support: https://serruremaster.com/support
+POURQUOI AI-JE REÇU CET EMAIL ?
+Vous recevez cet email car une demande de connexion a été effectuée avec votre adresse email sur notre plateforme SerrureMaster. Si ce n'était pas vous, aucune action n'est nécessaire et votre compte reste totalement sécurisé.
+
+---
+
+SERRUREMASTER SAAS
+Solution professionnelle de gestion des accès et serrures connectées
+
+📍 254 Rue Vendôme, 69003 Lyon, France
+📧 contact@serruremaster.com | ☎️ +33 (0)4 XX XX XX XX
+🌐 https://serruremaster.com
+
+Aide & Support: https://serruremaster.com/support
 Confidentialité: https://serruremaster.com/privacy
-Conditions: https://serruremaster.com/legal
+Mentions Légales: https://serruremaster.com/legal
 
-© 2024 SerrureMaster. Tous droits réservés.
+---
+
+Cet email a été envoyé à {{ .Email }} car vous avez demandé un accès à votre compte SerrureMaster.
+
+© 2024-2026 SerrureMaster SaaS. Tous droits réservés.
+SIRET: XXX XXX XXX XXXXX
+
