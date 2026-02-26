@@ -11,7 +11,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Un plan structuré pour analyser une porte claquée, comprendre les techniques professionnelles d’ouverture fine et éviter les erreurs irréversibles. Économisez jusqu’à 400€ de dépannage en tentant l’intervention dans le cadre légal et technique approprié.',
     price: 100,
-    originalPrice: 500,
+    originalPrice: 250,
     features: [
       'Vidéo HD : technique professionnelle sans perçage',
       'PDF Diagnostic : vérifier si la porte est réellement claquée',
@@ -75,7 +75,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Tutoriel technique pour changer un cylindre standard sans erreur de mesure ni main-d’œuvre excessive. Comprendre les dimensions critiques, les outils nécessaires et les pièges à éviter. Idéal après emménagement ou mise à niveau de sécurité.',
     price: 100,
-    originalPrice: 500,
+    originalPrice: 300,
     features: [
       'Tutoriel vidéo : démontage sécurisé',
       'PDF mesures exactes (intérieur / extérieur)',
@@ -129,7 +129,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Méthodologie professionnelle pour évaluer vos vulnérabilités et prioriser les renforcements efficaces sans travaux lourds. Obtenez un plan d’action personnalisé avec budget maîtrisé et assistance technique pour validation à distance.',
     price: 100,
-    originalPrice: 500,
+    originalPrice: 300,
     features: [
       'Audit guidé (photos + questionnaire)',
       'Plan d’action priorisé (24h / 7j / 30j)',
@@ -151,7 +151,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Sélection professionnelle du matériel indispensable pour gérer les situations courantes sans stress. Liste vérifiée, liens d’achat directs, aucun gadget inutile. Économie immédiate garantie.',
     price: 29,
-    originalPrice: 145,
+    originalPrice: 100,
     features: [
       'Liens d’achat directs (qualité pro)',
       'Matériel réellement utile (pas de gadgets)',

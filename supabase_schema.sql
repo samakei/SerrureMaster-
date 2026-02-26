@@ -129,7 +129,7 @@ insert into public.products (id, title, description, price, original_price, imag
   'Urgence : Porte Claquee',
   'La methode professionnelle pour diagnostiquer et tenter ouverture porte claquee sans cle sans percage.',
   100,
-  500,
+  250,
   'https://images.unsplash.com/photo-1558002038-1091a1661116',
   'price_1SiPxGDs1RajryhDI67AEulE',
   'bundle'
@@ -149,7 +149,7 @@ insert into public.products (id, title, description, price, original_price, imag
   'Remplacer son Cylindre',
   'Guide essentiel pour changer un cylindre standard soi-meme sans erreur de mesure.',
   100,
-  500,
+  300,
   'https://images.unsplash.com/photo-1581092160562-40aa08e78837',
   'price_1SiQBSDs1RajryhDzxFr1t86',
   'video'
@@ -169,7 +169,7 @@ insert into public.products (id, title, description, price, original_price, imag
   'Audit Securite et Renforcement',
   'Ameliorez jusqua 80 pourcent de votre securite sans blindage ni gros travaux.',
   100,
-  500,
+  300,
   'https://images.unsplash.com/photo-1519449419163-5a39223793e5',
   'price_1SiQKMDs1RajryhDsu55why0',
   'bundle'
@@ -179,7 +179,7 @@ insert into public.products (id, title, description, price, original_price, imag
   'Pack : Le Kit de Survie',
   'La liste exacte du materiel professionnel utile pour gerer 90 pourcent des problemes courants.',
   29,
-  145,
+  100,
   'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8',
   'price_1SiQN7Ds1RajryhD1bnlfKel',
   'bundle'
