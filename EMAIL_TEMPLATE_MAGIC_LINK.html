@@ -4,73 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Connexion à SerrureMaster</title>
-    <style>
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background-color: #f7f7f7;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-      }
-      .header {
-        background-color: #1e293b;
-        color: #ffffff;
-        padding: 30px 20px;
-        text-align: center;
-        border-bottom: 3px solid #f97316;
-      }
-      .header h1 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 700;
-      }
-      .content {
-        padding: 40px 30px;
-      }
-      .message {
-        font-size: 15px;
-        color: #475569;
-        margin-bottom: 30px;
-        line-height: 1.7;
-      }
-      .cta-container {
-        text-align: center;
-        margin: 35px 0;
-      }
-      .cta-button {
-        display: inline-block;
-        background-color: #f97316;
-        color: #ffffff;
-        padding: 14px 45px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 16px;
-      }
-      .footer {
-        background-color: #f8fafc;
-        padding: 30px;
-        text-align: center;
-        border-top: 1px solid #e2e8f0;
-        font-size: 13px;
-        color: #64748b;
-      }
-      .company-info {
-        margin: 15px 0 0 0;
-        font-size: 12px;
-        color: #94a3b8;
-        line-height: 1.8;
-      }
-    </style>
   </head>
-  <body style="margin: 0; padding: 0; background-color: #f7f7f7">
+  <body
+    style="
+      font-family:
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    "
+  >
+    <span
+      style="
+        display: none;
+        font-size: 1px;
+        line-height: 1px;
+        max-height: 0;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        mso-hide: all;
+      "
+    >
+      Votre lien de connexion sécurisé SerrureMaster. Valable 24 heures.
+    </span>
     <table
       role="presentation"
       width="100%"
@@ -80,39 +39,73 @@
     >
       <tr>
         <td style="padding: 20px 0; text-align: center">
-          <div class="container">
+          <div
+            class="container"
+            style="
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: #ffffff;
+              border: 1px solid #e2e8f0;
+            "
+          >
             <!-- Header -->
-            <div class="header">
-              <h1>🔐 SerrureMaster</h1>
+            <div
+              class="header"
+              style="
+                background-color: #1e293b;
+                color: #ffffff;
+                padding: 30px 20px;
+                text-align: center;
+                border-bottom: 3px solid #f97316;
+              "
+            >
+              <h1 style="margin: 0; font-size: 24px; font-weight: 700">SerrureMaster</h1>
               <p style="margin: 10px 0 0 0; font-size: 14px; color: #cbd5e1">
-                Gestion Intelligente des Accès
+                Gestion professionnelle des accès et serrures connectées
               </p>
             </div>
 
             <!-- Content -->
-            <div class="content">
+            <div class="content" style="padding: 40px 30px">
               <p style="font-size: 16px; margin-bottom: 20px; color: #1e293b">Bonjour,</p>
 
-              <p class="message">
-                Vous avez demandé à accéder à votre espace membre SerrureMaster. Nous sommes ravis
-                de vous accompagner dans la gestion sécurisée de vos accès et serrures connectées.
+              <p
+                class="message"
+                style="font-size: 15px; color: #475569; margin-bottom: 30px; line-height: 1.7"
+              >
+                Vous avez demandé à accéder à votre espace membre SerrureMaster. Ce message est
+                transactionnel et contient votre lien de connexion sécurisé.
               </p>
 
-              <p class="message">
-                Pour des raisons de sécurité, nous utilisons un système de connexion sans mot de
-                passe. Cliquez simplement sur le bouton ci-dessous pour vous connecter en toute
-                sécurité à votre compte :
+              <p
+                class="message"
+                style="font-size: 15px; color: #475569; margin-bottom: 30px; line-height: 1.7"
+              >
+                Pour votre sécurité, ce lien est personnel et valable pendant 24 heures. Cliquez sur
+                le bouton ci-dessous pour vous connecter à votre compte :
               </p>
 
               <!-- CTA Button -->
-              <div class="cta-container">
-                <a href="{{ .ConfirmationURL }}" class="cta-button">
-                  🔓 Se Connecter à Mon Compte
+              <div class="cta-container" style="text-align: center; margin: 35px 0">
+                <a
+                  href="{{ .ConfirmationURL }}"
+                  class="cta-button"
+                  style="
+                    display: inline-block;
+                    background-color: #f97316;
+                    color: #ffffff;
+                    padding: 14px 45px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 16px;
+                  "
+                >
+                  Se connecter à mon compte
                 </a>
               </div>
 
               <p style="text-align: center; font-size: 14px; color: #64748b; margin: 20px 0">
-                Ce lien est valide pendant les 24 prochaines heures
+                Lien valable pendant 24 heures
               </p>
 
               <!-- What you get -->
@@ -125,7 +118,7 @@
                 "
               >
                 <p style="margin: 0 0 10px 0; font-weight: 600; color: #92400e">
-                  ✨ Votre espace membre vous donne accès à :
+                  Votre espace membre vous donne accès à :
                 </p>
                 <ul style="margin: 0; padding-left: 20px; color: #78350f">
                   <li>Vos guides de formation exclusifs</li>
@@ -146,10 +139,10 @@
                   color: #0369a1;
                 "
               >
-                <strong>🛡️ Sécurité Renforcée :</strong> Ce lien de connexion est unique et
-                personnel. Il expirera automatiquement dans 24 heures. Si vous n'avez pas demandé
-                cet accès, vous pouvez ignorer cet email en toute sécurité. Aucune action
-                supplémentaire n'est requise.
+                <strong>Sécurité :</strong> Ce lien de connexion est unique et personnel. Il
+                expirera automatiquement dans 24 heures. Si vous n'avez pas demandé cet accès, vous
+                pouvez ignorer cet email en toute sécurité. Aucune action supplémentaire n'est
+                requise.
               </p>
 
               <!-- Why this email -->
@@ -160,7 +153,7 @@
                 <p style="font-size: 13px; color: #64748b; margin: 0">
                   Vous recevez cet email car une demande de connexion a été effectuée avec votre
                   adresse email sur notre plateforme SerrureMaster. Si ce n'était pas vous, aucune
-                  action n'est nécessaire et votre compte reste totalement sécurisé.
+                  action n'est nécessaire et votre compte reste sécurisé.
                 </p>
               </div>
 
@@ -183,7 +176,17 @@
             </div>
 
             <!-- Footer -->
-            <div class="footer">
+            <div
+              class="footer"
+              style="
+                background-color: #f8fafc;
+                padding: 30px;
+                text-align: center;
+                border-top: 1px solid #e2e8f0;
+                font-size: 13px;
+                color: #64748b;
+              "
+            >
               <div style="margin-bottom: 20px">
                 <a
                   href="https://serruremaster.com/support"
@@ -204,13 +207,15 @@
                 >
               </div>
 
-              <div class="company-info">
+              <div
+                class="company-info"
+                style="margin: 15px 0 0 0; font-size: 12px; color: #94a3b8; line-height: 1.8"
+              >
                 <strong>SerrureMaster SaaS</strong><br />
-                Solution professionnelle de gestion des accès et serrures connectées<br />
+                Solution professionnelle Editée par SpeedDev Studio<br />
                 <br />
-                📍 254 Rue Vendôme, 69003 Lyon, France<br />
-                📧 contact@serruremaster.com | ☎️ +33 (0)4 XX XX XX XX<br />
-                🌐
+                254 Rue Vendôme, 69003 Lyon, France<br />
+                contact@serruremaster.com | +33 (0)7 57 57 03 89<br />
                 <a href="https://serruremaster.com" style="color: #0369a1; text-decoration: none"
                   >serruremaster.com</a
                 >
@@ -218,11 +223,14 @@
 
               <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #cbd5e1">
                 <p style="margin: 5px 0; font-size: 11px; color: #94a3b8">
-                  Cet email a été envoyé à {{ .Email }} car vous avez demandé un accès à votre
+                  Cet email a été envoyé à {{ .Email }} suite à une demande de connexion à votre
                   compte SerrureMaster.
                 </p>
                 <p style="margin: 5px 0; font-size: 11px; color: #94a3b8">
-                  © 2024-2026 SerrureMaster SaaS. Tous droits réservés. SIRET: XXX XXX XXX XXXXX
+                  © 2024-2026 SerrureMaster SaaS. Tous droits réservés. Editée par SpeedDev Studio SIRET:  82960329900035
+                </p>
+                <p style="margin: 5px 0; font-size: 11px; color: #94a3b8">
+                  Email transactionnel. Aucune communication marketing n'est incluse.
                 </p>
               </div>
             </div>
