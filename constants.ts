@@ -1,7 +1,7 @@
 import { Product, ProductType, CourseContent } from './types';
 
 export const APP_NAME = 'SerrureMaster';
-export const LOGO_URL = '/images/p1.jpg'; // Utilise une image existante comme fallback
+export const LOGO_URL = '/images/logo_serruremaster.png';
 export const DEFAULT_HERO_IMAGE = '/images/p1.jpg';
 
 export const PRODUCTS: Product[] = [

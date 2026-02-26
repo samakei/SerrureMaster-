@@ -14,203 +14,91 @@ interface LayoutProps {
   onCheckout: () => void;
 }
 
-// Composant Logo Vectoriel Ultra-Moderne avec Glassmorphism & 3D
+// Composant Logo Tech Moderne - Version Cyber avec Clé Digitale
 const SerrureMasterLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg
-    viewBox="0 0 420 75"
+    viewBox="0 0 380 70"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     aria-label="Logo SerrureMaster"
-    style={{ filter: 'drop-shadow(0 4px 12px rgba(249, 115, 22, 0.2))' }}
+    style={{ filter: 'drop-shadow(0 2px 8px rgba(14, 165, 233, 0.3))' }}
   >
     <defs>
-      {/* Dégradé principal moderne (Orange → Rose → Violet) */}
-      <linearGradient id="shield_modern_grad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style={{ stopColor: '#f97316', stopOpacity: 1 }} />
-        <stop offset="50%" style={{ stopColor: '#ec4899', stopOpacity: 1 }} />
-        <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 1 }} />
+      {/* Dégradé blanc principal */}
+      <linearGradient id="cyber_blue" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+        <stop offset="100%" style={{ stopColor: '#f5f5f5', stopOpacity: 1 }} />
       </linearGradient>
 
-      {/* Dégradé lumineux cyan électrique */}
-      <linearGradient id="glow_cyan" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style={{ stopColor: '#06b6d4', stopOpacity: 1 }} />
-        <stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} />
+      {/* Dégradé orange accent */}
+      <linearGradient id="orange_accent" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style={{ stopColor: '#F97316', stopOpacity: 1 }} />
+        <stop offset="100%" style={{ stopColor: '#ea580c', stopOpacity: 1 }} />
       </linearGradient>
 
-      {/* Effet glassmorphism */}
-      <linearGradient id="glass_effect" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.15 }} />
-        <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 0.05 }} />
-      </linearGradient>
-
-      {/* Filtre glow soft */}
-      <filter id="soft_glow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+      {/* Effet néon glow */}
+      <filter id="neon_glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
         <feMerge>
           <feMergeNode in="coloredBlur" />
           <feMergeNode in="SourceGraphic" />
         </feMerge>
       </filter>
-
-      {/* Ombre interne 3D */}
-      <filter id="inner_shadow">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
-        <feOffset dx="0" dy="2" result="offsetblur" />
-        <feComponentTransfer>
-          <feFuncA type="linear" slope="0.4" />
-        </feComponentTransfer>
-        <feMerge>
-          <feMergeNode />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
     </defs>
 
-    {/* Groupe Icône Bouclier Moderne */}
-    <g transform="translate(10, 8)">
-      {/* Bouclier principal avec dégradé tri-color */}
-      <path
-        d="M28 0 L50 11 V28 C50 42 40 55 28 60 C16 55 6 42 6 28 V11 L28 0 Z"
-        fill="url(#shield_modern_grad)"
-        filter="url(#soft_glow)"
-      >
-        <animate attributeName="opacity" values="0.95;1;0.95" dur="4s" repeatCount="indefinite" />
-      </path>
-
-      {/* Couche glassmorphism */}
-      <path
-        d="M28 3 L47 12 V28 C47 40 38 52 28 56 C18 52 9 40 9 28 V12 L28 3 Z"
-        fill="url(#glass_effect)"
-        opacity="0.6"
-      />
-
-      {/* Découpe hexagonale centrale (forme M moderne) */}
-      <path
-        d="M28 14 L38 22 V42 L28 50 L18 42 V22 L28 14 Z"
-        fill="#0a0f1e"
-        opacity="0.95"
-        filter="url(#inner_shadow)"
-      />
-
-      {/* Cadenas moderne minimaliste */}
-      <g transform="translate(28, 30)" filter="url(#soft_glow)">
-        {/* Corps du cadenas */}
-        <rect x="-5" y="0" width="10" height="8" rx="1.5" fill="url(#glow_cyan)" />
-
-        {/* Anse du cadenas (arc) */}
-        <path
-          d="M-3 0 V-4 C-3 -5.65 -1.65 -7 0 -7 C1.65 -7 3 -5.65 3 -4 V0"
-          stroke="url(#glow_cyan)"
-          strokeWidth="1.5"
-          fill="none"
-          strokeLinecap="round"
-        />
-
-        {/* Point lumineux central */}
-        <circle cx="0" cy="4" r="1.5" fill="#0a0f1e">
-          <animate attributeName="r" values="1.5;2;1.5" dur="2s" repeatCount="indefinite" />
-        </circle>
-
-        {/* Pulsation lumineuse */}
-        <circle cx="0" cy="4" r="1.5" fill="url(#glow_cyan)" opacity="0.6">
-          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite" />
-        </circle>
-      </g>
-
-      {/* Particules tech flottantes */}
-      <g opacity="0.7">
-        <circle cx="55" cy="15" r="2.5" fill="#06b6d4">
-          <animate attributeName="cy" values="15;12;15" dur="3s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="58" cy="25" r="1.5" fill="#ec4899">
-          <animate attributeName="cy" values="25;22;25" dur="2.5s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="1" cy="15" r="2.5" fill="#a855f7">
-          <animate attributeName="cy" values="15;18;15" dur="3.5s" repeatCount="indefinite" />
-        </circle>
-        <circle cx="-2" cy="25" r="1.5" fill="#f97316">
-          <animate attributeName="cy" values="25;28;25" dur="2.8s" repeatCount="indefinite" />
-        </circle>
-      </g>
-
-      {/* Lignes de connexion animées */}
-      <g opacity="0.5" strokeWidth="1" strokeLinecap="round">
-        <line x1="50" y1="15" x2="55" y2="15" stroke="#06b6d4">
-          <animate attributeName="x2" values="55;58;55" dur="3s" repeatCount="indefinite" />
-        </line>
-        <line x1="6" y1="15" x2="1" y2="15" stroke="#a855f7">
-          <animate attributeName="x2" values="1;-2;1" dur="3.5s" repeatCount="indefinite" />
-        </line>
+    {/* Groupe Icône - Porte */}
+    <g transform="translate(5, 10)">
+      <g transform="translate(28, 25)">
+        {/* Panneau de porte */}
+        <rect x="-13" y="-17.3" width="26" height="34.6" rx="2.6" fill="#F97316" />
+        {/* Poignee */}
+        <circle cx="7.2" cy="0.6" r="1.75" fill="#ffffff" />
       </g>
     </g>
 
-    {/* Groupe Texte Ultra-Moderne */}
-    <g transform="translate(85, 0)">
-      {/* Texte principal avec effet 3D subtil */}
+    {/* Groupe Texte Moderne Tech */}
+    <g transform="translate(70, 0)">
+      {/* Texte principal - Design épuré */}
       <text
         x="0"
-        y="36"
+        y="32"
         fontFamily="'Inter', sans-serif"
-        fontWeight="900"
-        fontSize="26"
-        letterSpacing="1.5"
-        fill="url(#shield_modern_grad)"
-        style={{ paintOrder: 'stroke fill' }}
+        fontWeight="800"
+        fontSize="24"
+        letterSpacing="0.5"
+        fill="#ffffff"
       >
         SERRURE
-        <tspan fill="#06b6d4" dx="4">
-          MASTER
-        </tspan>
       </text>
 
-      {/* Reflet glassmorphism sur le texte */}
       <text
         x="0"
-        y="35"
+        y="52"
         fontFamily="'Inter', sans-serif"
-        fontWeight="900"
-        fontSize="26"
-        letterSpacing="1.5"
-        fill="url(#glass_effect)"
-        opacity="0.8"
+        fontWeight="800"
+        fontSize="24"
+        letterSpacing="0.5"
+        fill="#F97316"
       >
-        SERRURE
-        <tspan dx="4">MASTER</tspan>
+        MASTER
       </text>
 
-      {/* Badge moderne sous le titre */}
-      <g transform="translate(0, 45)">
-        {/* Fond du badge */}
-        <rect
-          x="0"
-          y="0"
-          width="120"
-          height="16"
-          rx="8"
-          fill="url(#shield_modern_grad)"
-          opacity="0.15"
-        />
-
-        {/* Texte du badge */}
+      {/* Badge "TECH SECURE" */}
+      <g transform="translate(140, 18)">
+        <rect x="0" y="0" width="75" height="18" rx="9" fill="#ffffff" opacity="0.15" />
         <text
-          x="60"
-          y="11"
+          x="37.5"
+          y="12"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
-          fontSize="9"
-          fill="#06b6d4"
-          letterSpacing="2"
+          fontSize="8"
+          fill="#ffffff"
+          letterSpacing="1.5"
           textAnchor="middle"
-          style={{ textTransform: 'uppercase' }}
         >
-          Votre Sécurité
+          TECH SECURE
         </text>
-
-        {/* Point lumineux animé */}
-        <circle cx="8" cy="8" r="2" fill="#10b981">
-          <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" />
-        </circle>
       </g>
     </g>
   </svg>

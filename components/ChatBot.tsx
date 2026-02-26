@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2, Bot } from 'lucide-react';
 import { sendMessageToGemini } from '../services/geminiService';
 import { ChatMessage, User } from '../types';
-import { LOGO_URL } from '../constants';
 
 interface ChatBotProps {
   user?: User | null;
@@ -105,13 +104,13 @@ export const ChatBot: React.FC<ChatBotProps> = ({ user, isOpen: externalIsOpen, 
 
       {/* Chat Window */}
       {isChatOpen && (
-        <div className="fixed bottom-6 right-6 w-[calc(100%-3rem)] sm:w-96 h-[550px] max-h-[80vh] bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-slate-200 animate-slideUp origin-bottom-right">
+        <div className="fixed bottom-2 right-2 left-2 sm:left-auto sm:bottom-6 sm:right-6 w-auto sm:w-96 h-80 sm:h-96 md:h-[550px] max-h-[85vh] bg-white rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden border border-slate-200 animate-slideUp origin-bottom-right">
           {/* Header */}
           <div className="bg-slate-900 p-4 flex justify-between items-center text-white shadow-md">
             <div className="flex items-center">
               <div className="bg-white/10 p-1.5 rounded-full mr-3 border border-white/20 backdrop-blur-sm">
                 <img
-                  src={LOGO_URL}
+                  src="/images/p1.jpg"
                   alt="Bot"
                   className="h-6 w-6 object-contain"
                   onError={(e) => {
