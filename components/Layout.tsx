@@ -14,7 +14,7 @@ interface LayoutProps {
   onCheckout: () => void;
 }
 
-// Composant Logo Tech Moderne - Version Cyber avec Clé Digitale
+// Composant Logo Professionnel - Serrurerie avec Clé et Cadenas
 const SerrureMasterLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     viewBox="0 0 380 70"
@@ -22,44 +22,49 @@ const SerrureMasterLogo: React.FC<{ className?: string }> = ({ className }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     aria-label="Logo SerrureMaster"
-    style={{ filter: 'drop-shadow(0 2px 8px rgba(14, 165, 233, 0.3))' }}
+    style={{ filter: 'drop-shadow(0 2px 8px rgba(255, 140, 0, 0.3))' }}
   >
     <defs>
-      {/* Dégradé blanc principal */}
-      <linearGradient id="cyber_blue" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
-        <stop offset="100%" style={{ stopColor: '#f5f5f5', stopOpacity: 1 }} />
+      {/* Dégradé orange principal */}
+      <linearGradient id="orange_gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style={{ stopColor: '#FF9500', stopOpacity: 1 }} />
+        <stop offset="100%" style={{ stopColor: '#FF8C00', stopOpacity: 1 }} />
       </linearGradient>
 
-      {/* Dégradé orange accent */}
-      <linearGradient id="orange_accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      {/* Dégradé texte orange */}
+      <linearGradient id="text_gradient" x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%" style={{ stopColor: '#F97316', stopOpacity: 1 }} />
         <stop offset="100%" style={{ stopColor: '#ea580c', stopOpacity: 1 }} />
       </linearGradient>
-
-      {/* Effet néon glow */}
-      <filter id="neon_glow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-        <feMerge>
-          <feMergeNode in="coloredBlur" />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
     </defs>
 
-    {/* Groupe Icône - Porte */}
-    <g transform="translate(5, 10)">
-      <g transform="translate(28, 25)">
-        {/* Panneau de porte */}
-        <rect x="-13" y="-17.3" width="26" height="34.6" rx="2.6" fill="#F97316" />
-        {/* Poignee */}
-        <circle cx="7.2" cy="0.6" r="1.75" fill="#ffffff" />
-      </g>
+    {/* Icon circle avec fond orange dégradé */}
+    <circle cx="35" cy="35" r="30" fill="url(#orange_gradient)" />
+
+    {/* Clé */}
+    <g transform="translate(8, 28)">
+      {/* Tige de la clé */}
+      <rect x="0" y="0" width="24" height="6" rx="3" fill="white" />
+      {/* Tête de la clé (cercle) */}
+      <circle cx="0" cy="3" r="5" fill="white" />
+      {/* Dents de la clé */}
+      <rect x="24" y="1" width="3" height="4" fill="white" />
+      <rect x="28" y="1" width="2" height="4" fill="white" />
     </g>
 
-    {/* Groupe Texte Moderne Tech */}
-    <g transform="translate(70, 0)">
-      {/* Texte principal - Design épuré */}
+    {/* Cadenas */}
+    <g transform="translate(38, 20)">
+      {/* Corps du cadenas */}
+      <rect x="0" y="0" width="12" height="18" rx="2" fill="white" />
+      {/* Trou de serrure */}
+      <circle cx="6" cy="12" r="3" fill="#FF8C00" />
+      {/* Ligne de sécurité */}
+      <line x1="1" y1="12" x2="11" y2="12" stroke="#FF8C00" strokeWidth="1.5" opacity="0.6" />
+    </g>
+
+    {/* Groupe Texte */}
+    <g transform="translate(75, 0)">
+      {/* Texte principal */}
       <text
         x="0"
         y="32"
@@ -79,16 +84,24 @@ const SerrureMasterLogo: React.FC<{ className?: string }> = ({ className }) => (
         fontWeight="800"
         fontSize="24"
         letterSpacing="0.5"
-        fill="#F97316"
+        fill="url(#text_gradient)"
       >
         MASTER
       </text>
 
-      {/* Badge "TECH SECURE" */}
+      {/* Badge "PRO LOCKSMITH" */}
       <g transform="translate(140, 18)">
-        <rect x="0" y="0" width="75" height="18" rx="9" fill="#ffffff" opacity="0.15" />
+        <rect
+          x="0"
+          y="0"
+          width="90"
+          height="18"
+          rx="9"
+          fill="url(#orange_gradient)"
+          opacity="0.2"
+        />
         <text
-          x="37.5"
+          x="45"
           y="12"
           fontFamily="'Inter', sans-serif"
           fontWeight="700"
@@ -97,7 +110,7 @@ const SerrureMasterLogo: React.FC<{ className?: string }> = ({ className }) => (
           letterSpacing="1.5"
           textAnchor="middle"
         >
-          TECH SECURE
+          PRO LOCKSMITH
         </text>
       </g>
     </g>

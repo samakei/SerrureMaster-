@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF9500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main circle background -->
+  <circle cx="32" cy="32" r="30" fill="url(#orangeGradient)"/>
+  
+  <!-- Key shaft -->
+  <rect x="14" y="26" width="24" height="6" rx="3" fill="white"/>
+  
+  <!-- Key head (circle) -->
+  <circle cx="14" cy="29" r="5" fill="white"/>
+  
+  <!-- Key teeth -->
+  <rect x="38" y="27" width="3" height="4" fill="white"/>
+  <rect x="42" y="27" width="2" height="4" fill="white"/>
+  
+  <!-- Lock body (rectangle with rounded corners) -->
+  <rect x="44" y="20" width="12" height="18" rx="2" fill="white"/>
+  
+  <!-- Lock hole (circle inside lock) -->
+  <circle cx="50" cy="32" r="3" fill="#FF8C00"/>
+  
+  <!-- Security accent line -->
+  <line x1="45" y1="32" x2="55" y2="32" stroke="#FF8C00" stroke-width="1.5" opacity="0.6"/>
+</svg>
