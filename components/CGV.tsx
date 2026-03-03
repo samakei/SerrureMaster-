@@ -45,6 +45,14 @@ export const CGV: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 <span className="font-bold w-48">Dénomination commerciale :</span> SerrureMaster
               </div>
               <div className="flex items-center">
+                {' '}
+                <span className="font-bold w-48">Éditeur :</span> SpeedDev Studio
+              </div>
+              <div className="flex items-center">
+                <span className="font-bold w-48">SIRET :</span> 82960329900035
+              </div>
+              <div className="flex items-center">
+                {' '}
                 <span className="font-bold w-48">Activité :</span> Vente de plans d’action digitaux
                 en serrurerie
               </div>

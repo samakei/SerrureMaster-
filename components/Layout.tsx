@@ -377,7 +377,13 @@ export const Layout: React.FC<LayoutProps> = ({
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-slate-800 text-center text-xs">
-          © {new Date().getFullYear()} SerrureMaster. Tous droits réservés.
+          <p className="mb-2">© {new Date().getFullYear()} SerrureMaster. Tous droits réservés.</p>
+          <p className="text-slate-400">
+            Éditée et commercialisée par{' '}
+            <span className="text-orange-500 font-semibold">SpeedDev Studio</span>
+            <br />
+            SIRET: 82960329900035
+          </p>
         </div>
       </footer>
     </div>
