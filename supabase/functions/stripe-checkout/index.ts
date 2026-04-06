@@ -53,7 +53,8 @@ serve(async (req: Request) => {
       // Metadonnées utiles pour les Webhooks (pour activer le produit après paiement)
       metadata: {
         userId: userId,
-        productIds: JSON.stringify(items.map((i: any) => i.priceId)), // Simplification pour démo
+        productIds: JSON.stringify(items.map((i: any) => i.priceId)), // Compatibilité historique
+        priceIds: JSON.stringify(items.map((i: any) => i.priceId)),
       },
     });
 
