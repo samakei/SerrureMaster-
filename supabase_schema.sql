@@ -178,8 +178,8 @@ insert into public.products (id, title, description, price, original_price, imag
   'p6_survival_kit',
   'Pack : Le Kit de Survie',
   'La liste exacte du materiel professionnel utile pour gerer 90 pourcent des problemes courants.',
-  29,
   100,
+  149,
   'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8',
   'price_1SiQN7Ds1RajryhD1bnlfKel',
   'bundle'
