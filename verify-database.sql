@@ -8,7 +8,7 @@ SELECT
   price,
   stripe_price_id,
   CASE 
-    WHEN stripe_price_id LIKE 'price_1Si%' THEN '✅ Bon Price ID'
+    WHEN stripe_price_id LIKE 'price_%' THEN '✅ Bon Price ID'
     ELSE '❌ Mauvais Price ID'
   END as status
 FROM products 
@@ -24,5 +24,5 @@ SELECT COUNT(*) as total_products FROM products;
 
 -- ✅ Résultat attendu:
 -- - 6 produits avec IDs : p1, p2, p3, p4, p5, p6
--- - Tous les stripe_price_id commencent par 'price_1Si'
+-- - Tous les stripe_price_id commencent par 'price_'
 -- - Votre profil existe avec role = 'admin'

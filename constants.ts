@@ -24,7 +24,7 @@ export const PRODUCTS: Product[] = [
     },
     type: ProductType.BUNDLE,
     image: '/images/p1.jpg',
-    stripePriceId: 'price_1PqXyZA2eZvKYlo2kR9uWq5a',
+    stripePriceId: 'price_1SzwJYDLe2Jjixn4bGhLFxMs',
     // MOCK RESOURCE: PUBLISHED
     currentResource: {
       id: 'res_p1_v1',
@@ -56,7 +56,7 @@ export const PRODUCTS: Product[] = [
     },
     type: ProductType.BUNDLE,
     image: '/images/p2.jpg',
-    stripePriceId: 'price_1PqXzQB2eZvKYlo2mL8vTq4b',
+    stripePriceId: 'price_1SzwMADLe2Jjixn4bdikMh7z',
     // MOCK RESOURCE: DRAFT (Waiting for validation)
     currentResource: {
       id: 'res_p2_v1_draft',
@@ -88,7 +88,7 @@ export const PRODUCTS: Product[] = [
     },
     type: ProductType.VIDEO,
     image: '/images/p3.jpg',
-    stripePriceId: 'price_1PqY1RC2eZvKYlo2nN7wUr3c',
+    stripePriceId: 'price_1SzwP9DLe2Jjixn4iAbpOT2s',
     // NO RESOURCE (Admin needs to upload)
     currentResource: null,
   },
@@ -111,7 +111,7 @@ export const PRODUCTS: Product[] = [
     },
     type: ProductType.BUNDLE,
     image: '/images/p4.jpg',
-    stripePriceId: 'price_1PqY2SD2eZvKYlo2oP6xVs2d',
+    stripePriceId: 'price_1SzwU0DLe2Jjixn4zjdvNRCF',
     currentResource: {
       id: 'res_p4_v2',
       productId: 'p4_security_pack',
@@ -142,7 +142,7 @@ export const PRODUCTS: Product[] = [
     },
     type: ProductType.BUNDLE,
     image: '/images/p5.jpg',
-    stripePriceId: 'price_1PqY3TE2eZvKYlo2qR5yWt1e',
+    stripePriceId: 'price_1SzwX4DLe2Jjixn43RCnyVLi',
     currentResource: null,
   },
   {
@@ -159,7 +159,7 @@ export const PRODUCTS: Product[] = [
     ],
     type: ProductType.BUNDLE,
     image: '/images/p6.jpg',
-    stripePriceId: 'price_1PqY4UF2eZvKYlo2rS4zXu0f',
+    stripePriceId: 'price_1SzweODLe2Jjixn4T2MzkBD3',
     currentResource: {
       id: 'res_p6_kit',
       productId: 'p6_survival_kit',
