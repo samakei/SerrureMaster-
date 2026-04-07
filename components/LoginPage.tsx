@@ -199,7 +199,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) 
                 <button
                   type="submit"
                   disabled={
-                    status === 'loading' || isCooldown || (HCAPTCHA_SITE_KEY && !captchaToken)
+                    status === 'loading' || isCooldown || (!!HCAPTCHA_SITE_KEY && !captchaToken)
                   }
                   className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-orange-600 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-orange-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
