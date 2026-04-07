@@ -1,5 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 
+const forbiddenClientSecrets = [
+  'VITE_STRIPE_SECRET_KEY',
+  'VITE_STRIPE_WEBHOOK_SECRET',
+  'VITE_SUPABASE_SERVICE_ROLE_KEY',
+] as const;
+
+const leakedClientSecrets = forbiddenClientSecrets.filter((key) =>
+  Boolean((import.meta as any)?.env?.[key])
+);
+
+if (leakedClientSecrets.length > 0) {
+  const message = `⚠️ Secrets backend exposés côté frontend: ${leakedClientSecrets.join(', ')}. Supprimez ces variables VITE_* immédiatement.`;
+  console.error(message);
+  throw new Error(message);
+}
+
 // Récupération directe des variables d'environnement Vite
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;

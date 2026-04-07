@@ -52,6 +52,11 @@ interface ImportMetaEnv {
   readonly DEV: boolean;
   readonly PROD: boolean;
   readonly SSR: boolean;
+  readonly VITE_SUPABASE_URL?: string;
+  readonly VITE_SUPABASE_ANON_KEY?: string;
+  readonly VITE_STRIPE_PUBLIC_KEY?: string;
+  readonly VITE_GEMINI_API_KEY?: string;
+  readonly VITE_HCAPTCHA_SITE_KEY?: string;
 }
 
 interface ImportMeta {
