@@ -226,18 +226,50 @@ const SerrureMasterApp = () => {
     // 4. Check URL Params for Stripe callbacks
     const query = new URLSearchParams(window.location.search);
     if (query.get('status') === 'success') {
-      showNotification('✅ Paiement validé ! Bienvenue dans votre espace.');
+      showNotification('✅ Paiement validé ! Synchronisation de vos accès en cours...');
       clearCart();
-      if (!user) {
-        setUser({
-          id: MOCK_USER_ID,
-          email: 'client@test.com',
-          name: 'Nouveau Client',
-          purchasedProductIds: ['p1_door_slammed'], // Grant access to one product
-          role: 'user',
-          status: 'active',
-        });
-      }
+
+      const refreshPurchasesWithRetry = async (uid: string, email: string) => {
+        for (let attempt = 0; attempt < 6; attempt++) {
+          await fetchUserProfile(uid, email);
+
+          const { data: purchases } = await supabase
+            .from('user_products')
+            .select('product_id')
+            .eq('user_id', uid)
+            .limit(1);
+
+          if (purchases && purchases.length > 0) {
+            showNotification('✅ Accès activé. Vos guides sont disponibles.');
+            return;
+          }
+
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      };
+
+      void (async () => {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (session?.user?.email) {
+          await refreshPurchasesWithRetry(session.user.id, session.user.email);
+          return;
+        }
+
+        if (devMode) {
+          setUser({
+            id: MOCK_USER_ID,
+            email: 'client@test.com',
+            name: 'Nouveau Client',
+            purchasedProductIds: ['p1_door_slammed'],
+            role: 'user',
+            status: 'active',
+          });
+        }
+      })();
+
       setCurrentPage('dashboard');
       window.history.replaceState({}, '', '/');
     }
