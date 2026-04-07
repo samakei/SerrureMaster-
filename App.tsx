@@ -230,6 +230,21 @@ const SerrureMasterApp = () => {
       clearCart();
 
       const refreshPurchasesWithRetry = async (uid: string, email: string) => {
+        const returnedSessionId = query.get('session_id');
+
+        if (returnedSessionId) {
+          const { error: confirmError } = await supabase.functions.invoke(
+            'stripe-confirm-session',
+            {
+              body: { sessionId: returnedSessionId, userId: uid },
+            }
+          );
+
+          if (confirmError) {
+            console.warn('stripe-confirm-session non confirmé:', confirmError.message);
+          }
+        }
+
         for (let attempt = 0; attempt < 6; attempt++) {
           await fetchUserProfile(uid, email);
 

@@ -43,11 +43,14 @@ serve(async (req: Request) => {
     console.log(`Création de session pour User: ${userId} avec ${lineItems.length} articles`);
 
     // 5. Création de la Session Stripe Checkout
+    const separator = successUrl.includes('?') ? '&' : '?';
+    const successUrlWithSession = `${successUrl}${separator}session_id={CHECKOUT_SESSION_ID}`;
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
-      success_url: successUrl,
+      success_url: successUrlWithSession,
       cancel_url: cancelUrl,
       client_reference_id: userId,
       // Metadonnées utiles pour les Webhooks (pour activer le produit après paiement)
