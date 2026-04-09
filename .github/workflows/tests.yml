@@ -155,7 +155,7 @@ jobs:
           VITE_GEMINI_API_KEY: ${{ env.VITE_GEMINI_API_KEY }}
           VITE_HCAPTCHA_SITE_KEY: ${{ env.VITE_HCAPTCHA_SITE_KEY }}
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: build
           path: build
