@@ -57,6 +57,7 @@ interface ImportMetaEnv {
   readonly VITE_STRIPE_PUBLIC_KEY?: string;
   readonly VITE_GEMINI_API_KEY?: string;
   readonly VITE_HCAPTCHA_SITE_KEY?: string;
+  readonly VITE_ENABLE_SECURE_DOWNLOADS?: string;
 }
 
 interface ImportMeta {

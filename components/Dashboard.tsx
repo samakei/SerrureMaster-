@@ -144,7 +144,13 @@ const SecureFileDownload: React.FC<{
     setStatus('generating');
     setErrorMsg('');
 
-    const response = await generateSecureLink(user, product.id, fileName);
+    const response = await generateSecureLink(
+      user,
+      product.id,
+      fileName,
+      resource?.filePath,
+      isVideo ? 'video' : 'pdf'
+    );
 
     if (response.success && response.url) {
       setStatus('ready');

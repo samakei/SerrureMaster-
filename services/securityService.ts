@@ -1,10 +1,12 @@
 import { User } from '../types';
+import { supabase } from './supabaseClient';
 
 /**
  * ==========================================
  * DOCUMENTATION CONFIGURATION SUPABASE (RLS)
  * ==========================================
- * ... (Documentation remains valid) ...
+ * Phase 1: validation backend + logs d'accès.
+ * Phase 2: bucket privé + ressources pilotées par la base.
  */
 
 export interface SignedUrlResponse {
@@ -24,6 +26,7 @@ interface AuditLogEntry {
 }
 
 const mockAuditLogDB: AuditLogEntry[] = [];
+const secureDownloadsEnabled = import.meta.env.VITE_ENABLE_SECURE_DOWNLOADS === 'true';
 
 const logSecurityEvent = (entry: AuditLogEntry) => {
   mockAuditLogDB.push(entry);
@@ -39,7 +42,9 @@ const logSecurityEvent = (entry: AuditLogEntry) => {
 export const generateSecureLink = async (
   user: User,
   productId: string,
-  fileName: string
+  fileName: string,
+  filePath?: string,
+  accessType: 'pdf' | 'video' | 'asset' = 'pdf'
 ): Promise<SignedUrlResponse> => {
   // UX Optimization: Reduced artificial delay from 1200ms to 600ms
   // Keeps the "secure processing" feel without being annoying
@@ -89,14 +94,33 @@ export const generateSecureLink = async (
     }
 
     // ---------------------------------------------------------
-    // ÉTAPE 4 : Génération du Lien Signé (Mock for Demo)
+    // ÉTAPE 4 : Génération du Lien Signé (backend sécurisé si activé)
     // ---------------------------------------------------------
+    if (secureDownloadsEnabled && filePath) {
+      const { data, error } = await supabase.functions.invoke('secure-download-link', {
+        body: { productId, fileName, filePath, accessType },
+      });
+
+      if (error) {
+        throw new Error(error.message || 'Impossible de générer le lien sécurisé');
+      }
+
+      if (data?.success && data?.url) {
+        return {
+          success: true,
+          url: data.url,
+          expiresAt: data.expiresAt,
+        };
+      }
+
+      throw new Error(data?.error || 'Lien sécurisé indisponible');
+    }
+
     const expiresInSeconds = 15 * 60;
     const expiresAt = Date.now() + expiresInSeconds * 1000;
     const signature =
       Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
 
-    // Use a standard public PDF for demo purposes so "Download" actually does something visible
     const signedUrl = `https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf?token=${signature}&user=${user.id}`;
 
     logSecurityEvent({
