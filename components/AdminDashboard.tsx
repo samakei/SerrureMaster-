@@ -770,6 +770,40 @@ export const AdminDashboard: React.FC<{
     getAdminStats().then(setStats);
   }, []);
 
+  const exportLogsCsv = () => {
+    if (!stats?.logs || stats.logs.length === 0) {
+      return;
+    }
+
+    const escapeCsvCell = (value: unknown): string => {
+      const text = String(value ?? '');
+      return `"${text.replace(/"/g, '""')}"`;
+    };
+
+    const headers = ['horodatage', 'utilisateur', 'action', 'ip', 'details', 'niveau'];
+    const rows = stats.logs.map((log: AdminLog) => [
+      new Date(log.timestamp).toISOString(),
+      log.userId,
+      log.action,
+      log.ip,
+      log.details,
+      log.severity,
+    ]);
+
+    const csv = [headers, ...rows].map((row) => row.map(escapeCsvCell).join(';')).join('\n');
+    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const date = new Date().toISOString().slice(0, 10);
+
+    link.href = url;
+    link.download = `serruremaster-chatbot-logs-${date}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  };
+
   if (!stats)
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -946,8 +980,14 @@ export const AdminDashboard: React.FC<{
 
             {/* Logs */}
             <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-              <div className="p-4 sm:p-6 border-b border-slate-800">
+              <div className="p-4 sm:p-6 border-b border-slate-800 flex items-center justify-between gap-3">
                 <h3 className="text-base sm:text-lg font-bold text-white">Logs Système Récents</h3>
+                <button
+                  onClick={exportLogsCsv}
+                  className="px-3 py-2 rounded-lg border border-slate-700 text-slate-200 hover:bg-slate-800 text-xs sm:text-sm font-bold flex items-center"
+                >
+                  <FileText className="w-4 h-4 mr-2" /> Export CSV
+                </button>
               </div>
               <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900">
                 <table className="w-full text-left text-xs sm:text-sm text-slate-400 min-w-[600px]">

@@ -1,5 +1,6 @@
 import { User, AdminLog, DailySales } from '../types';
 import { MOCK_USER_ID } from '../constants';
+import { supabase } from './supabaseClient';
 
 // Mock Data
 const MOCK_USERS: User[] = [
@@ -127,13 +128,59 @@ export const getAdminStats = async () => {
     };
   });
 
+  let dbLogs: AdminLog[] = [];
+
+  try {
+    const { data, error } = await supabase
+      .from('chatbot_conversations')
+      .select(
+        'id,created_at,user_id,message,response,is_non_compatible_case,rule_trigger,error_message,ip'
+      )
+      .order('created_at', { ascending: false })
+      .limit(150);
+
+    if (error) {
+      console.warn('Admin logs fallback (chatbot_conversations):', error.message);
+    } else {
+      dbLogs = (data || []).map((row: any) => {
+        const action =
+          row.rule_trigger === 'LOCKED_DOOR'
+            ? 'CHATBOT_NON_COMPATIBLE'
+            : row.rule_trigger === 'RUNTIME_ERROR'
+              ? 'CHATBOT_ERROR'
+              : 'CHATBOT_REPLY';
+
+        const severity: AdminLog['severity'] =
+          action === 'CHATBOT_ERROR' ? 'danger' : row.is_non_compatible_case ? 'warning' : 'info';
+
+        const detailsParts = [
+          row.message ? `Q: ${String(row.message).slice(0, 120)}` : null,
+          row.response ? `R: ${String(row.response).slice(0, 120)}` : null,
+          row.error_message ? `ERR: ${String(row.error_message).slice(0, 120)}` : null,
+        ].filter(Boolean);
+
+        return {
+          id: String(row.id),
+          timestamp: row.created_at,
+          ip: row.ip || 'unknown',
+          action,
+          userId: row.user_id || 'visitor',
+          details: detailsParts.join(' | '),
+          severity,
+        } as AdminLog;
+      });
+    }
+  } catch (e) {
+    console.warn('Admin logs fetch failed, keeping fallback mock logs.', e);
+  }
+
   return {
     revenue: totalRevenue,
     clients: activeClients,
     conversionRate: 3.4, // Mocked percentage
     salesTrend,
     users: MOCK_USERS,
-    logs: MOCK_LOGS,
+    logs: dbLogs.length > 0 ? dbLogs : MOCK_LOGS,
   };
 };
 
