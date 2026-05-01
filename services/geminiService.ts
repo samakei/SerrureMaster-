@@ -15,19 +15,21 @@ const toComparable = (value: string): string =>
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[’']/g, ' ')
+    .replace(/[^a-z0-9\s]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
 const isLockedDoorCase = (value: string): boolean => {
   const comparable = toComparable(value);
-  const blockedPatterns = [
-    'fermee a cle',
-    'cle tournee',
-    'verrouillee',
-    'cle a l interieur et verrouillee',
+  const blockedRegexes = [
+    /\bfermee\s+a\s+cle\b/,
+    /\bcle\s+(?:est\s+)?tournee\b/,
+    /\bverrouillee\b/,
+    /\bcle\s+a\s+l\s+interieur\s+et\s+verrouillee\b/,
   ];
 
-  return blockedPatterns.some((pattern) => comparable.includes(pattern));
+  return blockedRegexes.some((pattern) => pattern.test(comparable));
 };
 
 export const sendMessageToGemini = async (
