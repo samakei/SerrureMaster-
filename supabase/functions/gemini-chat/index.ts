@@ -25,6 +25,40 @@ SerrureMaster intervient uniquement sur des situations compatibles (porte claqu�
 
 Si vous avez une autre situation ou une question générale, je reste à votre disposition.`;
 
+const MAX_CHANNEL_RESPONSE_CHARS = 420;
+
+const finalizeChannelResponse = (value: string): string => {
+  const compact = (value || '')
+    .replace(/\r\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  if (!compact) {
+    return 'Je ne suis pas sur de comprendre. Pouvez-vous preciser votre situation ?';
+  }
+
+  let output = compact;
+  if (output.length > MAX_CHANNEL_RESPONSE_CHARS) {
+    const window = output.slice(0, MAX_CHANNEL_RESPONSE_CHARS + 1);
+    const lastDot = window.lastIndexOf('.');
+    const lastQuestion = window.lastIndexOf('?');
+    const lastExclamation = window.lastIndexOf('!');
+    const endIdx = Math.max(lastDot, lastQuestion, lastExclamation);
+
+    if (endIdx >= 120) {
+      output = window.slice(0, endIdx + 1).trim();
+    } else {
+      output = window.slice(0, MAX_CHANNEL_RESPONSE_CHARS - 1).trim() + '.';
+    }
+  }
+
+  if (!/[.!?]$/.test(output)) {
+    output += '.';
+  }
+
+  return output;
+};
+
 const toComparable = (value: string): string =>
   value
     .toLowerCase()
@@ -78,7 +112,7 @@ const buildContextInstruction = (isCustomer: boolean) => {
   if (isCustomer) {
     return `
 CONTEXTE : L'utilisateur est CLIENT (a deja achete).
-TON ROLE : Assistant Technique SerrureMaster (Support Post-Achat).
+TON ROLE : Assistant Virtuel (IA) SerrureMaster (Support Post-Achat).
 
 CADRE METIER SERRUREMASTER :
 - Service pedagogique, a distance, legal et non destructif.
@@ -103,7 +137,7 @@ OBJECTIF DE REPONSE :
 
   return `
 CONTEXTE : L'utilisateur est VISITEUR (Prospection).
-TON ROLE : Assistant Technique SerrureMaster (Filtrage & Orientation).
+TON ROLE : Assistant Virtuel (IA) SerrureMaster (Filtrage & Orientation).
 OBJECTIF : Accueillir, qualifier et orienter sans fournir d'instructions techniques.
 
 CADRE METIER SERRUREMASTER :
@@ -129,7 +163,7 @@ FLUX OBLIGATOIRE :
 5. Rappeler que les guides complets sont accessibles uniquement via l'espace membre apres achat.
 
 MESSAGES TYPES A PRIORISER :
-- Accueil : "Bonjour, vous etes en contact avec l'assistance SerrureMaster. Nous proposons un accompagnement pedagogique a distance pour certaines situations de serrurerie compatibles. Je vais vous poser quelques questions pour verifier votre situation."
+- Accueil : "Bonjour, vous etes en contact avec l'Assistant Virtuel (IA) SerrureMaster. Nous proposons un accompagnement pedagogique a distance pour certaines situations de serrurerie compatibles. Je vais vous poser quelques questions pour verifier votre situation."
 - Questions :
   "La porte est-elle simplement claquee ou fermee a cle ?"
   "Etes-vous le proprietaire ou avez-vous un droit d'acces au logement ?"
@@ -154,7 +188,7 @@ const buildConversationContext = (
   isCustomer: boolean
 ) => {
   const systemInstruction = `
-Tu es l'Assistant Technique SerrureMaster sur WhatsApp.
+Tu es l'Assistant Virtuel (IA) SerrureMaster sur WhatsApp.
 ${buildContextInstruction(isCustomer)}
 
 REGLES GLOBALES :
@@ -162,6 +196,9 @@ REGLES GLOBALES :
 - Ne donne jamais la solution technique detaillee.
 - Reste courtois mais ferme sur le cadre legal.
 - Si la demande est illegale, destructive, ou douteuse: recommander de ne pas agir.
+- Reponds en un seul message court (maximum 3 phrases, environ 350 caracteres).
+- Evite les listes numerotees et les parenthèses.
+- Si la situation est compatible, inclure clairement l'orientation vers l'espace membre pour les etapes completes.
 `;
 
   let conversationContext = systemInstruction + '\n\nHistorique de conversation:\n';
@@ -260,10 +297,12 @@ serve(async (req: Request) => {
       geminiJson?.candidates?.[0]?.content?.parts?.[0]?.text ||
       'Je ne suis pas sur de comprendre. Pouvez-vous preciser votre situation ?';
 
+    const safeText = finalizeChannelResponse(text);
+
     await persistChatLog({
       user_id: userId,
       message,
-      response: text,
+      response: safeText,
       is_customer: isCustomer,
       is_non_compatible_case: false,
       rule_trigger: null,
@@ -272,7 +311,7 @@ serve(async (req: Request) => {
       user_agent: userAgent,
     });
 
-    return new Response(JSON.stringify({ response: text }), {
+    return new Response(JSON.stringify({ response: safeText }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

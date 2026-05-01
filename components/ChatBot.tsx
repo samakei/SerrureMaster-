@@ -29,8 +29,8 @@ export const ChatBot: React.FC<ChatBotProps> = ({ user, isOpen: externalIsOpen, 
 
   // Initial Message Logic - Updated to strict Script
   const initialMessageText = isCustomer
-    ? "Bonjour, vous êtes en contact avec l’assistance SerrureMaster.\n\nJe suis là pour vous orienter dans l'utilisation de vos guides.\nPour rappel, je ne peux pas fournir d'instructions techniques détaillées ici.\n\nComment puis-je vous aider ?"
-    : 'Bonjour, vous êtes en contact avec l’assistance SerrureMaster.\n\nNous proposons un accompagnement pédagogique à distance pour certaines situations de serrurerie compatibles.\n\nJe vais vous poser quelques questions pour vérifier votre situation.\n\nLa porte est-elle simplement claquée ou fermée à clé ?';
+    ? "Bonjour, vous êtes en contact avec l’Assistant Virtuel (IA) SerrureMaster.\n\nJe suis là pour vous orienter dans l'utilisation de vos guides.\nPour rappel, je ne peux pas fournir d'instructions techniques détaillées ici.\n\nComment puis-je vous aider ?"
+    : 'Bonjour, vous êtes en contact avec l’Assistant Virtuel (IA) SerrureMaster.\n\nNous proposons un accompagnement pédagogique à distance pour certaines situations de serrurerie compatibles.\n\nJe vais vous poser quelques questions pour vérifier votre situation.\n\nLa porte est-elle simplement claquée ou fermée à clé ?';
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -98,7 +98,9 @@ export const ChatBot: React.FC<ChatBotProps> = ({ user, isOpen: externalIsOpen, 
           className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-3 sm:p-4 rounded-full shadow-2xl hover:shadow-green-500/40 transition-all duration-300 z-50 flex items-center justify-center animate-bounce-subtle group"
         >
           <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" />
-          <span className="ml-2 font-semibold text-xs sm:text-sm hidden sm:inline">Support</span>
+          <span className="ml-2 font-semibold text-xs sm:text-sm hidden sm:inline">
+            Assistant Virtuel (IA)
+          </span>
         </button>
       )}
 
@@ -119,9 +121,7 @@ export const ChatBot: React.FC<ChatBotProps> = ({ user, isOpen: externalIsOpen, 
                 />
               </div>
               <div>
-                <h3 className="font-bold text-sm">
-                  Support <span className="hidden sm:inline">SerrureMaster</span>
-                </h3>
+                <h3 className="font-bold text-sm">Assistant Virtuel (IA) SerrureMaster</h3>
                 <div className="flex items-center">
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
                   <p className="text-xs text-slate-300">En ligne</p>
